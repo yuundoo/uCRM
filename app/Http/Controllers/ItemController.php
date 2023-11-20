@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreItemRequest;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UpdateItemRequest;
 use App\Models\Item;
 use Inertia\Inertia;
-
+use Illuminate\Support\Facades\Gate;
 class ItemController extends Controller
 {
     /**
@@ -38,14 +39,13 @@ class ItemController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(StoreItemRequest $request)
-    {
-
+    {   
         Item::create([
             'name' => $request->name,
             'memo' => $request->memo,
-            'price' => $request->price
+            'price' => $request->price,
+            'user_id' => auth()->id()
         ]);
-
         return to_route('items.index')->with([
             'message' => '登録完了しました。',
             'status' => 'success'
@@ -73,9 +73,13 @@ class ItemController extends Controller
      */
     public function edit(Item $item)
     {
-        return Inertia::render('Items/Edit', [
-            'item' => $item
-        ]);
+        if (Gate::allows('items.edit', $item)) {
+            return Inertia::render('Items/Edit', [
+                'item' => $item
+            ]);
+        } else {
+            abort(403, 'この製品を編集する権限がありません。');
+        }
     }
 
     /**
@@ -107,6 +111,15 @@ class ItemController extends Controller
      */
     public function destroy(Item $item)
     {
-        //
+
+        if ($item->user_id !== Auth::id()) {
+            abort(403, 'この製品を編集する権限がありません。');
+        }
+
+        $item->delete();
+        return to_route('items.index')->with([
+            'message' => '削除しました。',
+            'status' => 'danger'
+        ]);
     }
 }

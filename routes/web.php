@@ -11,6 +11,7 @@ Route::resource('items', ItemController::class)->middleware(['auth', 'verified']
 Route::get('/items/create', [ItemController::class, 'create'])->name('items.create');
 Route::get('/items/show/{item}', [ItemController::class, 'show'])->name('items.show');
 Route::get('/items/{item}/edit/', [ItemController::class, 'edit'])->name('items.edit');
+Route::delete('/items/{item}', [ItemController::class, 'destroy'])->name('items.destroy');
 
 Route::get(
     '/inertia-test',
