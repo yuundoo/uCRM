@@ -8,6 +8,9 @@ use App\Http\Controllers\InertiaController;
 use App\Http\Controllers\ItemController;
 
 Route::resource('items', ItemController::class)->middleware(['auth', 'verified']);
+Route::get('/items/create', [ItemController::class, 'create'])->name('items.create');
+Route::get('/items/show/{item}', [ItemController::class, 'show'])->name('items.show');
+Route::get('/items/{item}/edit/', [ItemController::class, 'edit'])->name('items.edit');
 
 Route::get(
     '/inertia-test',
@@ -15,7 +18,6 @@ Route::get(
         return Inertia::render('InertiaTest');
     }
 );
-
 Route::get('/inertia/index', [InertiaController::class, 'index'])->name('inertia.index');
 Route::get('/inertia/create', [InertiaController::class, 'create'])->name('inertia.create');
 Route::get('/inertia/show/{id}', [InertiaController::class, 'show'])->name('inertia.show');
