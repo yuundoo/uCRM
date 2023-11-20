@@ -25,8 +25,15 @@ Route::get(
 );
 
 Route::get('/inertia/index', [InertiaController::class, 'index'])->name('inertia.index');
+Route::get('/inertia/create', [InertiaController::class, 'create'])->name('inertia.create');
 Route::get('/inertia/show/{id}', [InertiaController::class, 'show'])->name('inertia.show');
 Route::post('/inertia', [InertiaController::class, 'store'])->name('inertia.store');
+Route::delete('/inertia/{id}', [InertiaController::class, 'delete'])->name('inertia.delete');
+Route::get('/component-test', function () {
+    return Inertia::render('ComponentTest');
+});
+
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
