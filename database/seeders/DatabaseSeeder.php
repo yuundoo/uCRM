@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\ItemSeeder;
 
+
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -20,5 +21,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ItemSeeder::class
         ]);
+
+        \App\Models\Customer::factory(1000)->create();
     }
 }

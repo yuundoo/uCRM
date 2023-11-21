@@ -18,7 +18,7 @@ const storeItem = () => {
 </script>
 
 <template>
-    <Head title="商品一覧" />
+    <Head title="商品登録" />
 
     <AuthenticatedLayout>
         <template #header>

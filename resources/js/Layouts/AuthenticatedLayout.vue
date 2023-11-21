@@ -1,11 +1,12 @@
 <script setup>
-import { ref } from 'vue';
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
-import NavLink from '@/Components/NavLink.vue';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
+import { ref } from "vue";
+import ApplicationLogo from "@/Components/ApplicationLogo.vue";
+import Dropdown from "@/Components/Dropdown.vue";
+import DropdownLink from "@/Components/DropdownLink.vue";
+import NavLink from "@/Components/NavLink.vue";
+import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
+import { Link } from "@inertiajs/vue3";
+import Footer from "@/Components/Footer.vue";
 
 const showingNavigationDropdown = ref(false);
 </script>
@@ -28,12 +29,30 @@ const showingNavigationDropdown = ref(false);
                             </div>
 
                             <!-- Navigation Links -->
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex"
+                            >
+                                <NavLink
+                                    :href="route('dashboard')"
+                                    :active="route().current('dashboard')"
+                                >
+                                    ダッシュボード
                                 </NavLink>
-                                <NavLink :href="route('items.index')" :active="route().current('items.index')">
+                                <NavLink
+                                    :href="route('items.index')"
+                                    :active="route().current('items.index')"
+                                >
                                     商品管理
+                                </NavLink>
+                            </div>
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex"
+                            >
+                                <NavLink
+                                    :href="route('customers.index')"
+                                    :active="route().current('customers.index')"
+                                >
+                                    お客管理
                                 </NavLink>
                             </div>
                         </div>
@@ -67,8 +86,16 @@ const showingNavigationDropdown = ref(false);
                                     </template>
 
                                     <template #content>
-                                        <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
-                                        <DropdownLink :href="route('logout')" method="post" as="button">
+                                        <DropdownLink
+                                            :href="route('profile.edit')"
+                                        >
+                                            Profile
+                                        </DropdownLink>
+                                        <DropdownLink
+                                            :href="route('logout')"
+                                            method="post"
+                                            as="button"
+                                        >
                                             Log Out
                                         </DropdownLink>
                                     </template>
@@ -79,14 +106,23 @@ const showingNavigationDropdown = ref(false);
                         <!-- Hamburger -->
                         <div class="flex items-center -mr-2 sm:hidden">
                             <button
-                                @click="showingNavigationDropdown = !showingNavigationDropdown"
+                                @click="
+                                    showingNavigationDropdown =
+                                        !showingNavigationDropdown
+                                "
                                 class="inline-flex items-center justify-center p-2 text-gray-400 transition duration-150 ease-in-out rounded-md hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500"
                             >
-                                <svg class="w-6 h-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                                <svg
+                                    class="w-6 h-6"
+                                    stroke="currentColor"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                >
                                     <path
                                         :class="{
                                             hidden: showingNavigationDropdown,
-                                            'inline-flex': !showingNavigationDropdown,
+                                            'inline-flex':
+                                                !showingNavigationDropdown,
                                         }"
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
@@ -96,7 +132,8 @@ const showingNavigationDropdown = ref(false);
                                     <path
                                         :class="{
                                             hidden: !showingNavigationDropdown,
-                                            'inline-flex': showingNavigationDropdown,
+                                            'inline-flex':
+                                                showingNavigationDropdown,
                                         }"
                                         stroke-linecap="round"
                                         stroke-linejoin="round"
@@ -111,14 +148,23 @@ const showingNavigationDropdown = ref(false);
 
                 <!-- Responsive Navigation Menu -->
                 <div
-                    :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown }"
+                    :class="{
+                        block: showingNavigationDropdown,
+                        hidden: !showingNavigationDropdown,
+                    }"
                     class="sm:hidden"
                 >
                     <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                        <ResponsiveNavLink
+                            :href="route('dashboard')"
+                            :active="route().current('dashboard')"
+                        >
                             Dashboard
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('items.index')" :active="route().current('items.index')">
+                        <ResponsiveNavLink
+                            :href="route('items.index')"
+                            :active="route().current('items.index')"
+                        >
                             商品管理
                         </ResponsiveNavLink>
                     </div>
@@ -129,12 +175,20 @@ const showingNavigationDropdown = ref(false);
                             <div class="text-base font-medium text-gray-800">
                                 {{ $page.props.auth.user.name }}
                             </div>
-                            <div class="text-sm font-medium text-gray-500">{{ $page.props.auth.user.email }}</div>
+                            <div class="text-sm font-medium text-gray-500">
+                                {{ $page.props.auth.user.email }}
+                            </div>
                         </div>
 
                         <div class="mt-3 space-y-1">
-                            <ResponsiveNavLink :href="route('profile.edit')"> Profile </ResponsiveNavLink>
-                            <ResponsiveNavLink :href="route('logout')" method="post" as="button">
+                            <ResponsiveNavLink :href="route('profile.edit')">
+                                Profile
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink
+                                :href="route('logout')"
+                                method="post"
+                                as="button"
+                            >
                                 Log Out
                             </ResponsiveNavLink>
                         </div>
@@ -154,5 +208,6 @@ const showingNavigationDropdown = ref(false);
                 <slot />
             </main>
         </div>
+        <Footer />
     </div>
 </template>

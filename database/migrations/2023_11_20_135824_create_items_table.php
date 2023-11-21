@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable();
             $table->string('name');
-            $table->string('memo')->nulable();
+            $table->string('memo')->nullable();
             $table->integer('price');
             $table->boolean('is_selling')->default(true);
             $table->timestamps();

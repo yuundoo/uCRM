@@ -6,12 +6,15 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\InertiaController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\CustomerController;
 
 Route::resource('items', ItemController::class)->middleware(['auth', 'verified']);
 Route::get('/items/create', [ItemController::class, 'create'])->name('items.create');
 Route::get('/items/show/{item}', [ItemController::class, 'show'])->name('items.show');
 Route::get('/items/{item}/edit/', [ItemController::class, 'edit'])->name('items.edit');
 Route::delete('/items/{item}', [ItemController::class, 'destroy'])->name('items.destroy');
+
+Route::resource('customers', CustomerController::class)->middleware(['auth', 'verified']);
 
 Route::get(
     '/inertia-test',

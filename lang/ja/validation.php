@@ -158,7 +158,17 @@ return [
         'content' => '本文',
         'name' => '商品名',
         'memo' => '説明',
-        'price' => '価格'
+        'price' => '価格',
+        'kana' => 'カナ',
+        'tel' => '電話番号',
+        'email' => 'メールアドレス',
+        'postcode' => '郵便番号',
+        'address' => '住所',
+        'birthday' => '誕生日',
+        'gender' => '性別',
+        'username' => '顧客名',
+        'usermemo' => '説明',
+
     ],
 
 ];
