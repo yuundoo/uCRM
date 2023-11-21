@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\InertiaController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\PurchaseController;
 
 Route::resource('items', ItemController::class)->middleware(['auth', 'verified']);
 Route::get('/items/create', [ItemController::class, 'create'])->name('items.create');
@@ -15,6 +16,9 @@ Route::get('/items/{item}/edit/', [ItemController::class, 'edit'])->name('items.
 Route::delete('/items/{item}', [ItemController::class, 'destroy'])->name('items.destroy');
 
 Route::resource('customers', CustomerController::class)->middleware(['auth', 'verified']);
+
+Route::resource('purchases', PurchaseController::class)->middleware(['auth', 'verified']);
+
 
 Route::get(
     '/inertia-test',

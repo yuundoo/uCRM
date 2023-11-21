@@ -23,7 +23,7 @@ const showingNavigationDropdown = ref(false);
                             <div class="flex items-center shrink-0">
                                 <Link :href="route('dashboard')">
                                     <ApplicationLogo
-                                        class="block w-20 text-gray-800 fill-current h-9"
+                                        class="block text-gray-800 fill-current w-11 h-9"
                                     />
                                 </Link>
                             </div>
@@ -52,7 +52,19 @@ const showingNavigationDropdown = ref(false);
                                     :href="route('customers.index')"
                                     :active="route().current('customers.index')"
                                 >
-                                    お客管理
+                                    顧客管理
+                                </NavLink>
+                            </div>
+                            <div
+                                class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex"
+                            >
+                                <NavLink
+                                    :href="route('purchases.create')"
+                                    :active="
+                                        route().current('purchases.create')
+                                    "
+                                >
+                                    購入画面
                                 </NavLink>
                             </div>
                         </div>
