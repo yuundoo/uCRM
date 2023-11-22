@@ -48,7 +48,7 @@ defineProps({
                                                 <th
                                                     class="px-4 py-3 text-sm font-medium tracking-wider text-gray-900 bg-gray-100 rounded-tl rounded-bl title-font"
                                                 >
-                                                    Id
+                                                    ID
                                                 </th>
                                                 <th
                                                     class="px-4 py-3 text-sm font-medium tracking-wider text-gray-900 bg-gray-100 title-font"

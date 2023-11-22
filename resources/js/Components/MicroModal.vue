@@ -1,6 +1,5 @@
 <script setup>
-import axios from "axios";
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive } from "vue";
 
 const search = ref("");
 const customers = reactive({});
@@ -32,6 +31,7 @@ const setCustomer = (e) => {
     toggleStatus();
 };
 </script>
+
 <template>
     <div v-show="isShow" class="modal" id="modal-1" aria-hidden="true">
         <div class="modal__overlay" tabindex="-1" data-micromodal-close>

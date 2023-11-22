@@ -22,12 +22,12 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot():void
+    public function boot(): void
     {
         $this->registerPolicies();
 
-        Gate::define('items.edit', function($user, $item){
-            return $user->id === $item->user_id;
-        });
+        // Gate::define('items.edit', function($user, $item){
+        //     return $user->id === $item->user_id;
+        // });
     }
 }
