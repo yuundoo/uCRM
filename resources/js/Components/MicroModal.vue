@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive } from "vue";
 import axios from "axios";
+import Pagination from "./Pagination.vue";
 const search = ref("");
 const customers = reactive({});
 defineProps({ errors: Object });

@@ -6,24 +6,30 @@ import FlashMessage from "@/Components/FlashMessage.vue";
 import Pagination from "@/Components/Pagination.vue";
 import { ref } from "vue";
 import { Inertia } from "@inertiajs/inertia";
+
 const props = defineProps({
-    customers: Object,
+    orders: Object,
 });
 
 const search = ref("");
 
 const searchCustomers = () => {
-    Inertia.get(route("customers.index", { search: search.value }));
+    Inertia.get(route("purchases.index", { search: search.value }));
+};
+
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toISOString().split("T")[0];
 };
 </script>
 
 <template>
-    <Head title="顧客一覧" />
+    <Head title="購買履歴" />
 
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                顧客一覧
+                購買履歴
             </h2>
         </template>
 
@@ -54,18 +60,10 @@ const searchCustomers = () => {
 
                                     <Link
                                         as="button"
-                                        :href="route('customers.index')"
+                                        :href="route('purchases.index')"
                                         class="px-3 py-1 text-sm text-white bg-red-400 rounded hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-300"
                                     >
                                         リセット
-                                    </Link>
-
-                                    <Link
-                                        :href="route('customers.create')"
-                                        as="button"
-                                        class="px-3 py-1 text-sm text-white bg-indigo-400 rounded hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-300"
-                                    >
-                                        顧客登録
                                     </Link>
                                 </div>
                                 <div
@@ -89,20 +87,30 @@ const searchCustomers = () => {
                                                 <th
                                                     class="px-4 py-3 text-sm font-medium tracking-wider text-gray-900 bg-gray-100 title-font"
                                                 >
-                                                    カナ
+                                                    購買名
                                                 </th>
                                                 <th
                                                     class="px-4 py-3 text-sm font-medium tracking-wider text-gray-900 bg-gray-100 title-font"
                                                 >
-                                                    電話番号
+                                                    合計金額
+                                                </th>
+                                                <th
+                                                    class="px-4 py-3 text-sm font-medium tracking-wider text-gray-900 bg-gray-100 title-font"
+                                                >
+                                                    ステータス
+                                                </th>
+                                                <th
+                                                    class="px-4 py-3 text-sm font-medium tracking-wider text-gray-900 bg-gray-100 title-font"
+                                                >
+                                                    購入日
                                                 </th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr
-                                                v-for="customer in props
-                                                    .customers.data"
-                                                :key="customer.id"
+                                                v-for="order in props.orders
+                                                    .data"
+                                                :key="order.id"
                                             >
                                                 <td
                                                     class="px-4 py-3 border-b-2 border-gray-200"
@@ -111,31 +119,46 @@ const searchCustomers = () => {
                                                         class="text-blue-400"
                                                         :href="
                                                             route(
-                                                                'customers.show',
+                                                                'purchases.show',
                                                                 {
-                                                                    customer:
-                                                                        customer.id,
+                                                                    purchase:
+                                                                        order.id,
                                                                 }
                                                             )
                                                         "
                                                     >
-                                                        {{ customer.id }}
+                                                        {{ order.id }}
                                                     </Link>
                                                 </td>
+
                                                 <td
                                                     class="px-4 py-3 border-b-2 border-gray-200"
                                                 >
-                                                    {{ customer.username }}
+                                                    {{ order.customer_name }}
                                                 </td>
                                                 <td
                                                     class="px-4 py-3 border-b-2 border-gray-200"
                                                 >
-                                                    {{ customer.kana }}
+                                                    {{ order.item_name }}
                                                 </td>
                                                 <td
                                                     class="px-4 py-3 border-b-2 border-gray-200"
                                                 >
-                                                    {{ customer.tel }}
+                                                    {{ order.total }}
+                                                </td>
+                                                <td
+                                                    class="px-4 py-3 border-b-2 border-gray-200"
+                                                >
+                                                    {{ order.status }}
+                                                </td>
+                                                <td
+                                                    class="px-4 py-3 border-b-2 border-gray-200"
+                                                >
+                                                    {{
+                                                        formatDate(
+                                                            order.created_at
+                                                        )
+                                                    }}
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -144,7 +167,7 @@ const searchCustomers = () => {
                             </div>
                             <Pagination
                                 class="flex justify-center"
-                                :links="customers.links"
+                                :links="props.orders.links"
                             ></Pagination>
                         </section>
                     </div>

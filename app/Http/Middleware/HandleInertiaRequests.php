@@ -43,6 +43,7 @@ class HandleInertiaRequests extends Middleware
                 'message' => fn () => $request->session()->get('message'),
                 'status' => fn () => $request->session()->get('status')
             ]
+            // 플래시를 사용해서 위드로 사용후에 컴포넨트 작성후 가져와서 사용하면 메시지 출력됨 
         ]);
     }
 }

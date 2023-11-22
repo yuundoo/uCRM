@@ -8,8 +8,10 @@ use App\Models\Purchase;
 use Inertia\Inertia;
 use App\Models\Customer;
 use App\Models\Item;
+use App\Models\Order;
 use Illuminate\Support\Facades\DB;
-use PhpParser\Node\Stmt\TryCatch;
+use Illuminate\Http\Request;
+
 
 class PurchaseController extends Controller
 {
@@ -18,8 +20,20 @@ class PurchaseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $searchTerm = $request->input('search', '');
+
+        $orders = Order::query()
+            ->search($searchTerm) // 검색 스코프 메서드 적용
+            ->groupBy('id', 'customer_name', 'item_name', 'status', 'created_at')
+            ->selectRaw('id, customer_name, item_name, sum(subtotal) as total, status, created_at')
+            ->paginate(50);
+
+        return Inertia::render('Purchase/Index', [
+            'orders' => $orders,
+            'filters' => $request->only(['search' => $searchTerm]), // 검색 필터를 프론트엔드에 전달
+        ]);
     }
 
     /**
@@ -76,7 +90,17 @@ class PurchaseController extends Controller
      */
     public function show(Purchase $purchase)
     {
-        //
+        $item = Order::where('id', $purchase->id)->get();
+
+        //합계
+        $order = Order::where('id', $purchase->id)
+            ->groupBy('id')
+            ->selectRaw('id, sum(subtotal) as total, customer_name, status, created_at, updated_at')
+            ->get();
+        return Inertia::render('Purchase/Show', [
+            'item' => $item,
+            'order' => $order
+        ]);
     }
 
     /**
