@@ -1,8 +1,9 @@
 <script setup>
 import { ref, reactive } from "vue";
-
+import axios from "axios";
 const search = ref("");
 const customers = reactive({});
+defineProps({ errors: Object });
 
 const isShow = ref(false);
 const toggleStatus = () => {
@@ -107,7 +108,7 @@ const setCustomer = (e) => {
                                     <td
                                         class="px-4 py-3 border-b-2 border-gray-200"
                                     >
-                                        {{ customer.name }}
+                                        {{ customer.username }}
                                     </td>
                                     <td
                                         class="px-4 py-3 border-b-2 border-gray-200"
@@ -146,8 +147,9 @@ const setCustomer = (e) => {
     <button
         @click="searchCustomers"
         type="button"
+        :disabled="search.trim().length === 0"
         data-micromodal-trigger="modal-1"
-        class="flex px-8 py-2 mx-auto text-lg text-white bg-teal-500 border-0 rounded focus:outline-none hover:bg-teal-600"
+        class="flex px-8 py-2 mx-auto mt-3 text-lg text-white bg-teal-500 border-0 rounded cursor-pointer focus:outline-none hover:bg-teal-600"
     >
         検索する
     </button>

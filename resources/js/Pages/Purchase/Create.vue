@@ -5,6 +5,7 @@ import { Inertia } from "@inertiajs/inertia";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/inertia-vue3";
 import MicroModal from "@/Components/MicroModal.vue";
+
 const props = defineProps({ items: Array, errors: Object });
 
 const itemList = ref([]);
@@ -76,15 +77,16 @@ const quantity = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
                                                     >
                                                     <input
                                                         type="date"
+                                                        id="date"
                                                         name="date"
                                                         v-model="form.date"
                                                         class="w-full px-3 py-1 text-base leading-8 text-gray-700 transition-colors duration-200 ease-in-out bg-gray-100 bg-opacity-50 border border-gray-300 rounded outline-none focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200"
                                                     />
                                                     <div
-                                                        v-if="errors.date"
+                                                        v-if="props.errors.date"
                                                         class="mt-2 text-red-400"
                                                     >
-                                                        {{ errors.date }}
+                                                        {{ props.errors.date }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -105,13 +107,16 @@ const quantity = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
                                                         v-if="errors.username"
                                                         class="mt-2 text-red-400"
                                                     >
-                                                        {{ errors.username }}
+                                                        {{
+                                                            props.errors
+                                                                .username
+                                                        }}
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class="w-full p-2">
-                                                <div class="relative">
+                                                <div>
                                                     <label
                                                         for="name"
                                                         class="text-sm leading-7 text-gray-600"
@@ -219,7 +224,7 @@ const quantity = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
                                             </div>
 
                                             <div class="w-full p-2">
-                                                <div class="relative">
+                                                <div>
                                                     <div class="mt-4">
                                                         <strong>合計：</strong>
                                                         <span class="text-lg">{{
@@ -230,7 +235,7 @@ const quantity = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
                                             </div>
 
                                             <div class="w-full p-2">
-                                                <div class="relative">
+                                                <div>
                                                     <button
                                                         class="px-6 py-3 text-white bg-indigo-500 rounded hover:bg-indigo-600 focus:outline-none focus:shadow-outline"
                                                     >

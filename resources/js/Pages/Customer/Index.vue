@@ -18,12 +18,12 @@ const searchCustomers = () => {
 </script>
 
 <template>
-    <Head title="お客一覧" />
+    <Head title="顧客一覧" />
 
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                お客一覧
+                顧客一覧
             </h2>
         </template>
 
@@ -35,19 +35,19 @@ const searchCustomers = () => {
                             <div class="container px-5 py-8 mx-auto">
                                 <FlashMessage />
                                 <div
-                                    class="flex w-full pl-4 mx-auto my-4 lg:w-2/3"
+                                    class="flex w-full pl-4 mx-auto my-4 space-x-2 lg:w-2/3"
                                 >
                                     <input
                                         v-model="search"
                                         type="text"
                                         name="search"
                                         placeholder="入力..."
-                                        class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                                        class="w-3/4 px-3 py-1 leading-tight text-gray-700 border border-gray-300 rounded shadow-sm focus:outline-none focus:border-blue-300"
                                     />
 
                                     <button
                                         @click="searchCustomers"
-                                        class="px-4 py-2 ml-2 text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
+                                        class="px-3 py-1 text-sm text-white bg-blue-400 rounded hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300"
                                     >
                                         検索
                                     </button>
@@ -55,7 +55,7 @@ const searchCustomers = () => {
                                     <Link
                                         as="button"
                                         :href="route('customers.index')"
-                                        class="px-4 py-2 ml-2 text-white bg-red-500 rounded hover:bg-red-700 focus:outline-none focus:shadow-outline"
+                                        class="px-3 py-1 text-sm text-white bg-red-400 rounded hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-300"
                                     >
                                         リセット
                                     </Link>
@@ -63,9 +63,9 @@ const searchCustomers = () => {
                                     <Link
                                         :href="route('customers.create')"
                                         as="button"
-                                        class="flex px-3 py-2 ml-2 text-white bg-indigo-500 border-0 rounded cursor-pointer focus:outline-none hover:bg-indigo-600"
+                                        class="px-3 py-1 text-sm text-white bg-indigo-400 rounded hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-300"
                                     >
-                                        お客登録
+                                        顧客登録
                                     </Link>
                                 </div>
                                 <div

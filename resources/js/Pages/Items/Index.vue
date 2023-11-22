@@ -123,7 +123,6 @@ defineProps({
                                 </div>
                             </div>
                         </section>
-                        GitHub
                     </div>
                 </div>
             </div>
