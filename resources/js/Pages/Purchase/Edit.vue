@@ -1,23 +1,19 @@
 <script setup>
-import { getToday } from '@/common';
 import { onMounted, reactive, ref, computed } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/inertia-vue3';
-import MicroModal from '@/Components/MicroModal.vue';
-
-const props = defineProps({ items: Array, errors: Object });
+const props = defineProps({ items: Array, order: Array, errors: Object });
 
 const itemList = ref([]);
 
 onMounted(() => {
-   form.date = getToday();
    props.items.forEach(item => {
       itemList.value.push({
          id: item.id,
          name: item.name,
          price: item.price,
-         quantity: 0,
+         quantity: item.quantity,
       });
    });
 });
@@ -30,38 +26,40 @@ const totalPrice = computed(() => {
    return total;
 });
 
-const storePurchase = () => {
+const updatePurchase = id => {
    itemList.value.forEach(item => {
       if (item.quantity > 0) form.items.push({ id: item.id, quantity: item.quantity });
    });
-   Inertia.post(route('purchases.store'), form);
+   Inertia.put(route('purchases.update', { purchase: id }), form);
+};
+
+const formatDate = dateString => {
+   const date = new Date(dateString);
+   return date.toISOString().split('T')[0];
 };
 
 const form = reactive({
-   customer_id: null,
-   date: null,
-   status: true,
+   id: props.order[0].id,
+   customer_id: props.order[0].customer_id,
+   date: formatDate(props.order[0].created_at),
+   status: props.order[0].status,
    items: [],
 });
-
-const setCustomerId = id => {
-   form.customer_id = id;
-};
 
 const quantity = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 </script>
 <template>
-   <Head title="購入登録" />
+   <Head title="購買履歴編集" />
    <AuthenticatedLayout>
       <template #header>
-         <h2 class="text-xl font-semibold leading-tight text-gray-800">購入登録</h2>
+         <h2 class="text-xl font-semibold leading-tight text-gray-800">購買履歴編集</h2>
       </template>
       <div class="py-12">
          <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                <div class="p-6 text-gray-900">
                   <section class="relative text-gray-600 body-font">
-                     <form @submit.prevent="storePurchase">
+                     <form @submit.prevent="updatePurchase(form.id)">
                         <div class="container px-5 py-8 mx-auto">
                            <div class="mx-auto lg:w-1/2 md:w-2/3">
                               <div class="flex flex-wrap -m-2">
@@ -69,10 +67,11 @@ const quantity = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
                                     <div class="relative">
                                        <label for="date" class="text-sm leading-7 text-gray-600">日付</label>
                                        <input
+                                          disabled
                                           type="date"
                                           id="date"
                                           name="date"
-                                          v-model="form.date"
+                                          :value="form.date"
                                           class="w-full px-3 py-1 text-base leading-8 text-gray-700 transition-colors duration-200 ease-in-out bg-gray-100 bg-opacity-50 border border-gray-300 rounded outline-none focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200"
                                        />
                                        <div v-if="props.errors.date" class="mt-2 text-red-400">
@@ -85,7 +84,14 @@ const quantity = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
                                     <div class="relative">
                                        <label for="username" class="text-sm leading-7 text-gray-600">会員名</label
                                        ><br />
-                                       <MicroModal @update:customerId="setCustomerId" />
+                                       <input
+                                          disabled
+                                          type="text"
+                                          id="customer"
+                                          name="customer"
+                                          :value="props.order[0].customer_name"
+                                          class="w-full px-3 py-1 text-base leading-8 text-gray-700 transition-colors duration-200 ease-in-out bg-gray-100 bg-opacity-50 border border-gray-300 rounded outline-none focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200"
+                                       />
                                        <div v-if="errors.username" class="mt-2 text-red-400">
                                           {{ props.errors.username }}
                                        </div>
@@ -168,11 +174,44 @@ const quantity = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
                                  </div>
 
                                  <div class="w-full p-2">
+                                    <div class="relative">
+                                       <label for="status" class="text-sm leading-7 text-gray-600">ステータス</label
+                                       ><br />
+                                       <div class="flex items-center mt-2">
+                                          <input
+                                             type="radio"
+                                             id="is_selling_on"
+                                             name="status"
+                                             v-model="form.status"
+                                             value="0"
+                                             class="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                                          />
+                                          <label for="is_selling_off" class="ml-2 text-sm font-medium text-gray-600">
+                                             未キャンセル
+                                          </label>
+                                       </div>
+                                       <div class="flex items-center mt-2">
+                                          <input
+                                             type="radio"
+                                             id="status_off"
+                                             name="status"
+                                             v-model="form.status"
+                                             value="1"
+                                             class="w-4 h-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                                          />
+                                          <label for="is_selling_off" class="ml-2 text-sm font-medium text-gray-600">
+                                             キャンセル済
+                                          </label>
+                                       </div>
+                                    </div>
+                                 </div>
+
+                                 <div class="w-full p-2">
                                     <div>
                                        <button
                                           class="px-6 py-3 text-white bg-indigo-500 rounded hover:bg-indigo-600 focus:outline-none focus:shadow-outline"
                                        >
-                                          登録する
+                                          編集する
                                        </button>
                                     </div>
                                  </div>

@@ -26,7 +26,7 @@ class PurchaseController extends Controller
 
         $orders = Order::query()
             ->search($searchTerm) // 검색 스코프 메서드 적용
-            ->groupBy('id', 'customer_name', 'item_name', 'status', 'created_at')
+            ->groupBy('id')
             ->selectRaw('id, customer_name, item_name, sum(subtotal) as total, status, created_at')
             ->paginate(50);
 
@@ -43,11 +43,8 @@ class PurchaseController extends Controller
      */
     public function create()
     {
-        $customers = Customer::select('id', 'username', 'kana')->get();
         $items = Item::select('id', 'name', 'price')->where('is_selling', true)->get();
-
         return Inertia::render('Purchase/Create', [
-            'customers' => $customers,
             'items' => $items
         ]);
     }
@@ -77,7 +74,11 @@ class PurchaseController extends Controller
             }
             DB::commit();
 
-            return to_route('dashboard');
+            return to_route('purchases.index')->with([
+                'message' => '登録完了しました。',
+                'status' => 'success'
+            ]);
+
         } catch (\Exception $e) {
             DB::rollBack();
         }
@@ -110,8 +111,41 @@ class PurchaseController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(Purchase $purchase)
-    {
-        //
+    {   
+        $purchase = Purchase::find($purchase->id);
+        
+        $allItems = Item::select('id', 'name', 'price')
+        ->get();
+
+        $items = [];
+
+        foreach($allItems as $allItem){
+            $quantity = 0;
+            foreach($purchase->items as $item){
+                if($allItem->id === $item->id){
+                    $quantity = $item->pivot->quantity;
+                }
+            }
+            array_push($items, [
+                'id' => $allItem->id,
+                'name' => $allItem->name,
+                'price' => $allItem->price,
+                'quantity' => $quantity,
+            ]);
+        }
+       
+    
+        $order = Order::groupBy('id')
+        ->where('id', $purchase->id)
+        ->selectRaw('id, customer_id, 
+        customer_name, status, created_at')
+        ->get();
+
+        return Inertia::render('Purchase/Edit', [
+            'items' => $items,
+            'order' => $order
+        ]);
+
     }
 
     /**
@@ -123,7 +157,23 @@ class PurchaseController extends Controller
      */
     public function update(UpdatePurchaseRequest $request, Purchase $purchase)
     {
-        //
+        $purchase->status = $request->status;
+        $purchase->save();
+
+        $items = [];
+        foreach($request->items as $item){
+            $items = $items + [
+                $item['id']=> [
+                    'quantity' => $item['quantity']
+                ]
+            ];
+        }
+
+        $purchase->items()->sync($items);
+        return to_route('purchases.index')->with([
+            'message' => '修正完了しました。',
+            'status' => 'success'
+        ]);
     }
 
     /**
