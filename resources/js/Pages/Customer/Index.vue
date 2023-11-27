@@ -4,13 +4,22 @@ import { Head } from "@inertiajs/vue3";
 import { Link } from "@inertiajs/inertia-vue3";
 import FlashMessage from "@/Components/FlashMessage.vue";
 import Pagination from "@/Components/Pagination.vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { Inertia } from "@inertiajs/inertia";
 const props = defineProps({
     customers: Object,
 });
 
 const search = ref("");
+
+onMounted(() => {
+    // URL에서 검색어를 가져와서 search 상태에 설정
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchTerm = urlParams.get("search");
+    if (searchTerm) {
+        search.value = searchTerm;
+    }
+});
 
 const searchCustomers = () => {
     Inertia.get(route("customers.index", { search: search.value }));

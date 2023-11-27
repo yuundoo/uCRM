@@ -25,8 +25,7 @@ class StorePurchaseRequest extends FormRequest
     {
         return [
             'customer_id' => ['required'],
-            
-            
+
         ];
     }
 }

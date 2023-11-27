@@ -6,10 +6,8 @@ use App\Http\Requests\StorePurchaseRequest;
 use App\Http\Requests\UpdatePurchaseRequest;
 use App\Models\Purchase;
 use Inertia\Inertia;
-use App\Models\Customer;
 use App\Models\Item;
 use App\Models\Order;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 
@@ -27,7 +25,7 @@ class PurchaseController extends Controller
         $orders = Order::query()
             ->search($searchTerm) // 검색 스코프 메서드 적용
             ->groupBy('id')
-            ->selectRaw('id, customer_name, item_name, sum(subtotal) as total, status, created_at')
+            ->selectRaw('id, MAX(customer_name) as customer_name, GROUP_CONCAT(item_name) as item_name, SUM(subtotal) as total, MAX(status) as status, MAX(created_at) as created_at')
             ->paginate(50);
 
         return Inertia::render('Purchase/Index', [
@@ -58,30 +56,21 @@ class PurchaseController extends Controller
     public function store(StorePurchaseRequest $request)
     {
 
-        DB::beginTransaction();
-
-        try {
-
-            $purchase = Purchase::create([
-                'customer_id' => $request->customer_id,
-                'status' => $request->status,
+        $purchase = Purchase::create([
+            'customer_id' => $request->customer_id,
+            'status' => $request->status,
+        ]);
+        foreach ($request->items as $item) {
+            $purchase->items()->attach($purchase->id, [
+                'item_id' => $item['id'],
+                'quantity' => $item['quantity']
             ]);
-            foreach ($request->items as $item) {
-                $purchase->items()->attach($purchase->id, [
-                    'item_id' => $item['id'],
-                    'quantity' => $item['quantity']
-                ]);
-            }
-            DB::commit();
-
-            return to_route('purchases.index')->with([
-                'message' => '登録完了しました。',
-                'status' => 'success'
-            ]);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
         }
+
+        return to_route('purchases.index')->with([
+            'message' => '登録完了しました。',
+            'status' => 'success'
+        ]);
     }
     /**
      * Display the specified resource.
@@ -111,42 +100,31 @@ class PurchaseController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(Purchase $purchase)
-    {   
-        $purchase = Purchase::find($purchase->id);
-        
+    {
+        // Eager Loading을 사용하여 관련 항목 데이터를 미리 로드
+        $purchase->load('items');
+
+        // items를 키-값 쌍으로 변환
+        $purchaseItems = $purchase->items->keyBy('id');
+
+        // 모든 상품 정보를 가져오면서 해당 구매 항목의 수량을 설정
         $allItems = Item::select('id', 'name', 'price')
-        ->get();
-
-        $items = [];
-
-        foreach($allItems as $allItem){
-            $quantity = 0;
-            foreach($purchase->items as $item){
-                if($allItem->id === $item->id){
-                    $quantity = $item->pivot->quantity;
-                }
-            }
-            array_push($items, [
-                'id' => $allItem->id,
-                'name' => $allItem->name,
-                'price' => $allItem->price,
-                'quantity' => $quantity,
-            ]);
-        }
-       
-    
-        $order = Order::groupBy('id')
-        ->where('id', $purchase->id)
-        ->selectRaw('id, customer_id, 
-        customer_name, status, created_at')
-        ->get();
+            ->get()
+            ->map(function ($item) use ($purchaseItems) {
+                return [
+                    'id' => $item->id,
+                    'name' => $item->name,
+                    'price' => $item->price,
+                    'quantity' => $purchaseItems[$item->id]->pivot->quantity ?? 0,
+                ];
+            });
 
         return Inertia::render('Purchase/Edit', [
-            'items' => $items,
-            'order' => $order
+            'items' => $allItems,
+            'order' => $purchase->only(['id', 'customer_id', 'customer_name', 'status', 'created_at']),
         ]);
-
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -161,9 +139,9 @@ class PurchaseController extends Controller
         $purchase->save();
 
         $items = [];
-        foreach($request->items as $item){
+        foreach ($request->items as $item) {
             $items = $items + [
-                $item['id']=> [
+                $item['id'] => [
                     'quantity' => $item['quantity']
                 ]
             ];
