@@ -101,27 +101,38 @@ class PurchaseController extends Controller
      */
     public function edit(Purchase $purchase)
     {
-        // Eager Loading을 사용하여 관련 항목 데이터를 미리 로드
-        $purchase->load('items');
+        $purchase = Purchase::find($purchase->id);
 
-        // items를 키-값 쌍으로 변환
-        $purchaseItems = $purchase->items->keyBy('id');
-
-        // 모든 상품 정보를 가져오면서 해당 구매 항목의 수량을 설정
         $allItems = Item::select('id', 'name', 'price')
-            ->get()
-            ->map(function ($item) use ($purchaseItems) {
-                return [
-                    'id' => $item->id,
-                    'name' => $item->name,
-                    'price' => $item->price,
-                    'quantity' => $purchaseItems[$item->id]->pivot->quantity ?? 0,
-                ];
-            });
+            ->get();
+
+        $items = [];
+
+        foreach ($allItems as $allItem) {
+            $quantity = 0;
+            foreach ($purchase->items as $item) {
+                if ($allItem->id === $item->id) {
+                    $quantity = $item->pivot->quantity;
+                }
+            }
+            array_push($items, [
+                'id' => $allItem->id,
+                'name' => $allItem->name,
+                'price' => $allItem->price,
+                'quantity' => $quantity,
+            ]);
+        }
+
+
+        $order = Order::groupBy('id')
+            ->where('id', $purchase->id)
+            ->selectRaw('id, customer_id, 
+        customer_name, status, created_at')
+            ->get();
 
         return Inertia::render('Purchase/Edit', [
-            'items' => $allItems,
-            'order' => $purchase->only(['id', 'customer_id', 'customer_name', 'status', 'created_at']),
+            'items' => $items,
+            'order' => $order
         ]);
     }
 
