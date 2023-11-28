@@ -7,6 +7,8 @@ use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class CustomerController extends Controller
 {
@@ -43,17 +45,21 @@ class CustomerController extends Controller
      */
     public function store(StoreCustomerRequest $request)
     {
-        Customer::create([
+        $customer = Customer::create([
             'username' => $request->username,
             'kana' => $request->kana,
             'tel' => $request->tel,
             'email' => $request->email,
+            'password' => Hash::make($request->password),
             'postcode' => $request->postcode,
             'address' => $request->address,
             'birthday' => $request->birthday,
             'gender' => $request->gender,
             'usermemo' => $request->usermemo,
         ]);
+
+        Auth::login($customer);
+
         return to_route('customers.index')->with([
             'message' => '登録完了しました。',
             'status' => 'success'
@@ -68,7 +74,7 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        return Inertia::render('Customer/Show',[
+        return Inertia::render('Customer/Show', [
             'customer' => $customer
         ]);
     }
@@ -81,7 +87,7 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        return Inertia::render('Customer/Edit',[
+        return Inertia::render('Customer/Edit', [
             'customer' => $customer
         ]);
     }
@@ -94,7 +100,7 @@ class CustomerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateCustomerRequest $request, Customer $customer)
-    
+
     {
         $customer->username = $request->username;
         $customer->kana =   $request->kana;
@@ -110,8 +116,8 @@ class CustomerController extends Controller
             ->with([
                 'message' => '更新しました。',
                 'status' => 'success'
-            ]); 
-        }
+            ]);
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -120,10 +126,6 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        $customer->delete();
-        return to_route('customers.index')->with([
-            'message' => '削除しました。',
-            'status' => 'danger'
-        ]);
+        //
     }
 }

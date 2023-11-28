@@ -3,16 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Http\Requests\StoreCustomerRequest;
 use App\Providers\RouteServiceProvider;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\Customer;
 
 class RegisteredUserController extends Controller
 {
@@ -29,23 +26,23 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreCustomerRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:'.User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
-
-        $user = User::create([
-            'name' => $request->name,
+        $customer = Customer::create([
+            'username' => $request->username,
+            'kana' => $request->kana,
+            'tel' => $request->tel,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'postcode' => $request->postcode,
+            'address' => $request->address,
+            'birthday' => $request->birthday,
+            'gender' => $request->gender,
+            'usermemo' => $request->usermemo,
+            'role' => 'user'
         ]);
 
-        event(new Registered($user));
-
-        Auth::login($user);
+        Auth::login($customer);
 
         return redirect(RouteServiceProvider::HOME);
     }

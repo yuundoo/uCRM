@@ -12,6 +12,8 @@ const form = reactive({
     kana: null,
     tel: null,
     email: null,
+    password: null,
+    password_confirmation: null,
     postcode: null,
     address: null,
     birthday: null,
@@ -103,7 +105,7 @@ const fetchAddress = () => {
                                                         >電話番号</label
                                                     >
                                                     <input
-                                                        type=" tel"
+                                                        type="tel"
                                                         id="tel"
                                                         name="tel"
                                                         v-model="form.tel"
@@ -137,6 +139,58 @@ const fetchAddress = () => {
                                                         class="mt-2 text-red-400"
                                                     >
                                                         {{ errors.email }}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="w-full p-2">
+                                                <div class="relative">
+                                                    <label
+                                                        for="password"
+                                                        class="text-sm leading-7 text-gray-600"
+                                                        >暗証番号</label
+                                                    >
+                                                    <input
+                                                        type="password"
+                                                        id="password"
+                                                        name="password"
+                                                        v-model="form.password"
+                                                        class="w-full px-3 py-1 text-base leading-8 text-gray-700 transition-colors duration-200 ease-in-out bg-gray-100 bg-opacity-50 border border-gray-300 rounded outline-none focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200"
+                                                    />
+                                                    <div
+                                                        v-if="errors.password"
+                                                        class="mt-2 text-red-400"
+                                                    >
+                                                        {{ errors.password }}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="w-full p-2">
+                                                <div class="relative">
+                                                    <label
+                                                        for="password_confirmation"
+                                                        class="text-sm leading-7 text-gray-600"
+                                                        >暗証番号確認</label
+                                                    >
+                                                    <input
+                                                        type="password"
+                                                        id="password_confirmation"
+                                                        name="password_confirmation"
+                                                        v-model="
+                                                            form.password_confirmation
+                                                        "
+                                                        class="w-full px-3 py-1 text-base leading-8 text-gray-700 transition-colors duration-200 ease-in-out bg-gray-100 bg-opacity-50 border border-gray-300 rounded outline-none focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200"
+                                                    />
+                                                    <div
+                                                        v-if="
+                                                            errors.password_confirmation
+                                                        "
+                                                        class="mt-2 text-red-400"
+                                                    >
+                                                        {{
+                                                            errors.password_confirmation
+                                                        }}
                                                     </div>
                                                 </div>
                                             </div>

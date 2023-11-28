@@ -146,6 +146,7 @@ class PurchaseController extends Controller
      */
     public function update(UpdatePurchaseRequest $request, Purchase $purchase)
     {
+        $this->authorize('update', $purchase);
         $purchase->status = $request->status;
         $purchase->save();
 

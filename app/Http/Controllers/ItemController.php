@@ -18,9 +18,14 @@ class ItemController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Items/Index', [
-            'items' =>  Item::select('id', 'name', 'price', 'is_selling')->get()
-        ]);
+
+        if (auth()->user()->role === 'admin') {
+            return Inertia::render('Items/Index', [
+                'items' =>  Item::select('id', 'name', 'price', 'is_selling')->get()
+            ]);
+        } else {
+            abort(403, '権限がありません。');
+        }
     }
 
     /**

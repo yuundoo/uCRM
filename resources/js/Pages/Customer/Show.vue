@@ -2,15 +2,8 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 import { Link } from "@inertiajs/inertia-vue3";
-import { Inertia } from "@inertiajs/inertia";
 
 defineProps({ customer: Object });
-
-const deleteItems = (id) => {
-    Inertia.delete(route("customers.destroy", { customer: id }), {
-        onBefore: () => confirm("本当に削除しますか？"),
-    });
-};
 </script>
 
 <template>
@@ -153,7 +146,7 @@ const deleteItems = (id) => {
                                                     >
                                                     <div
                                                         id="gender"
-                                                        class="w-full px-3 py-1 text-base leading-8 text-gray-700 transition-colors duration-200 ease-in-out bg-opacity-50 border border-gray-300 rounded outline-none focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200"
+                                                        class="w-full px-3 py-1 text-base leading-8 text-gray-700 transition-colors duration-200 ease-in-out bg-gray-100 bg-opacity-50 border border-gray-300 rounded outline-none focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200"
                                                     >
                                                         <span
                                                             v-if="
@@ -186,12 +179,23 @@ const deleteItems = (id) => {
                                                         class="text-sm leading-7 text-gray-600"
                                                         >説明</label
                                                     >
+                                                    <!-- 값이 있는 경우 -->
                                                     <div
+                                                        v-if="customer.usermemo"
                                                         id="usermemo"
                                                         class="w-full px-3 py-1 text-base leading-8 text-gray-700 transition-colors duration-200 ease-in-out bg-gray-100 bg-opacity-50 border border-gray-300 rounded outline-none focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200"
                                                     >
                                                         {{ customer.usermemo }}
                                                     </div>
+
+                                                    <!-- 값이 없는 경우 (텍스트 영역으로 표시) -->
+                                                    <textarea
+                                                        v-else
+                                                        disabled
+                                                        id="usermemo"
+                                                        class="w-full px-3 py-1 text-base leading-8 text-gray-700 transition duration-200 ease-in-out bg-gray-100 border border-gray-300 rounded focus:border-indigo-500 focus:bg-white focus:ring focus:ring-indigo-200"
+                                                        placeholder="入力してください。。。"
+                                                    ></textarea>
                                                 </div>
                                             </div>
                                             <div
@@ -212,14 +216,6 @@ const deleteItems = (id) => {
                                                 >
                                                     顧客編集
                                                 </Link>
-                                                <button
-                                                    @click="
-                                                        deleteItems(customer.id)
-                                                    "
-                                                    class="px-8 py-2 text-lg text-white bg-red-500 border-0 rounded focus:outline-none hover:bg-red-600"
-                                                >
-                                                    削除
-                                                </button>
                                             </div>
                                         </div>
                                     </div>

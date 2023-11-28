@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\User;
 use App\Models\Purchase;
+use App\Models\Customer;
 
 class Item extends Model
 {
@@ -18,9 +19,9 @@ class Item extends Model
     ];
 
 
-    public function user(): BelongsTo
+    public function customers(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Customer::class);
     }
 
     public function purchases()

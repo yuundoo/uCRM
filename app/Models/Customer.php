@@ -3,15 +3,44 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use App\Models\Item;
 use App\Models\Purchase;
 
-class Customer extends Model
+class Customer extends Authenticatable
 {
-    use HasFactory;
+    use HasApiTokens, HasFactory, Notifiable;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
 
     protected $fillable = [
-        'username', 'kana', 'tel', 'email', 'postcode', 'address', 'birthday', 'gender', 'usermemo'
+        'username', 'kana', 'tel', 'email', 'password', 'postcode', 'address', 'birthday', 'gender', 'usermemo'
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
     ];
 
     public function scopeSearchCustomers($query, $input = null)
@@ -23,6 +52,11 @@ class Customer extends Model
                     ->orWhere('tel', 'like', $input . '%');
             });
         }
+    }
+
+    public function item(): HasMany
+    {
+        return $this->hasMany(Item::class);
     }
 
 

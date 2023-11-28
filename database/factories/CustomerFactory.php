@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Customer>
@@ -26,12 +27,14 @@ class CustomerFactory extends Factory
             'username' => $this->faker->name,
             'kana' => $this->faker->kanaName,
             'tel' => $tel,
-            'email' => $this->faker->email,
+            'email' => $this->faker->unique()->safeEmail,
+            'password' => Hash::make('password123'),
             'postcode' => $this->faker->postcode,
             'address' => $address,
             'birthday' => $this->faker->dateTime,
             'gender' => $this->faker->numberBetween(0, 2),
             'usermemo' => $this->faker->realText(50),
+            'role' => 'user'
         ];
     }
 }

@@ -18,12 +18,15 @@ return new class extends Migration
             $table->string('username');
             $table->string('kana');
             $table->string('tel')->unique();
-            $table->string('email');
+            $table->string('email')->unique();
+            $table->string('password');
             $table->string('postcode');
             $table->string('address');
+            $table->string('role')->default('user');
             $table->date('birthday');
             $table->tinyInteger('gender'); // 0男性, 1女性、2その他
             $table->text('usermemo')->nullable();
+            $table->rememberToken();
             $table->timestamps();
         });
     }
