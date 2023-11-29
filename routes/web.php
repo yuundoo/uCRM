@@ -8,7 +8,9 @@ use App\Http\Controllers\InertiaController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\StylelistController;
+use Illuminate\Support\Facades\Auth;
 
 Route::resource('items', ItemController::class)->middleware(['auth', 'verified']);
 Route::get('/items/create', [ItemController::class, 'create'])->name('items.create');
@@ -22,6 +24,7 @@ Route::resource('purchases', PurchaseController::class)->middleware(['auth', 've
 
 Route::resource('stylelists', StylelistController::class)->middleware(['auth', 'verified']);
 
+Route::resource('reservations', ReservationController::class)->middleware(['auth', 'verified']);
 
 
 Route::get(

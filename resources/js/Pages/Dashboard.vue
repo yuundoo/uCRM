@@ -37,7 +37,10 @@ import { Link } from "@inertiajs/inertia-vue3";
                         </p>
                     </div>
                     <div class="flex flex-wrap -m-4">
-                        <div class="p-4 xl:w-1/4 md:w-1/2">
+                        <div
+                            class="p-4 xl:w-1/4 md:w-1/2"
+                            v-if="$page.props.auth.user.role === 'admin'"
+                        >
                             <div class="p-6 bg-gray-100 rounded-lg">
                                 <img
                                     class="object-cover object-center w-full h-40 mb-6 rounded"
@@ -61,7 +64,10 @@ import { Link } from "@inertiajs/inertia-vue3";
                                 </p>
                             </div>
                         </div>
-                        <div class="p-4 xl:w-1/4 md:w-1/2">
+                        <div
+                            class="p-4 xl:w-1/4 md:w-1/2"
+                            v-if="$page.props.auth.user.role === 'admin'"
+                        >
                             <div class="p-6 bg-gray-100 rounded-lg">
                                 <img
                                     class="object-cover object-center w-full h-40 mb-6 rounded"
@@ -85,7 +91,10 @@ import { Link } from "@inertiajs/inertia-vue3";
                                 </p>
                             </div>
                         </div>
-                        <div class="p-4 xl:w-1/4 md:w-1/2">
+                        <div
+                            class="p-4 xl:w-1/4 md:w-1/2"
+                            v-if="$page.props.auth.user.role === 'admin'"
+                        >
                             <div class="p-6 bg-gray-100 rounded-lg">
                                 <img
                                     class="object-cover object-center w-full h-40 mb-6 rounded"
@@ -109,7 +118,10 @@ import { Link } from "@inertiajs/inertia-vue3";
                                 </p>
                             </div>
                         </div>
-                        <div class="p-4 xl:w-1/4 md:w-1/2">
+                        <div
+                            class="p-4 xl:w-1/4 md:w-1/2"
+                            v-if="$page.props.auth.user.role === 'admin'"
+                        >
                             <div class="p-6 bg-gray-100 rounded-lg">
                                 <img
                                     class="object-cover object-center w-full h-40 mb-6 rounded"
@@ -130,6 +142,29 @@ import { Link } from "@inertiajs/inertia-vue3";
                                 <p class="text-base leading-relaxed">
                                     商品購入顧客を通じて、どの顧客がどの商品を購入したかを追跡してください。
                                     これにより、在庫を管理し、特別な特典を提供することができます。
+                                </p>
+                            </div>
+                        </div>
+                        <div class="p-4 xl:w-1/4 md:w-1/2">
+                            <div class="p-6 bg-gray-100 rounded-lg">
+                                <img
+                                    class="object-cover object-top w-full h-40 mb-6 rounded"
+                                    src="images/designer.jpg"
+                                    alt="content"
+                                />
+                                <h3
+                                    class="text-xs font-medium tracking-widest text-indigo-500 title-font"
+                                >
+                                    タイトル
+                                </h3>
+                                <Link
+                                    :href="route('stylelists.index')"
+                                    class="mb-4 text-lg font-medium text-gray-900 cursor-pointer title-font"
+                                >
+                                    デザイナーご紹介/予約
+                                </Link>
+                                <p class="text-base leading-relaxed">
+                                    うちのサロンでは、それぞれ異なる専門性と創造性を持った卓越したデザイナーたちがあなたの美しさのために最善を尽くしております。
                                 </p>
                             </div>
                         </div>

@@ -7,7 +7,6 @@ use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class CustomerController extends Controller
@@ -19,12 +18,17 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        $customers =
-            Customer::searchCustomers($request->search)
-            ->select('id', 'username', 'kana', 'tel')->paginate(50);
-        return Inertia::render('Customer/Index', [
-            'customers' => $customers
-        ]);
+
+        if (auth()->user()->role === 'admin') {
+            $customers =
+                Customer::searchCustomers($request->search)
+                ->select('id', 'username', 'kana', 'tel')->paginate(50);
+            return Inertia::render('Customer/Index', [
+                'customers' => $customers
+            ]);
+        } else {
+            abort(403, '権限がありません。');
+        }
     }
 
     /**
@@ -34,7 +38,11 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Customer/Create');
+        if (auth()->user()->role === 'admin') {
+            return Inertia::render('Customer/Create');
+        } else {
+            abort(403, '権限がありません。');
+        }
     }
 
     /**
@@ -45,7 +53,7 @@ class CustomerController extends Controller
      */
     public function store(StoreCustomerRequest $request)
     {
-        $customer = Customer::create([
+        Customer::create([
             'username' => $request->username,
             'kana' => $request->kana,
             'tel' => $request->tel,
@@ -57,8 +65,6 @@ class CustomerController extends Controller
             'gender' => $request->gender,
             'usermemo' => $request->usermemo,
         ]);
-
-        Auth::login($customer);
 
         return to_route('customers.index')->with([
             'message' => '登録完了しました。',
@@ -74,9 +80,13 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        return Inertia::render('Customer/Show', [
-            'customer' => $customer
-        ]);
+        if (auth()->user()->role === 'admin') {
+            return Inertia::render('Customer/Show', [
+                'customer' => $customer
+            ]);
+        } else {
+            abort(403, '権限がありません。');
+        }
     }
 
     /**
@@ -87,9 +97,13 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        return Inertia::render('Customer/Edit', [
-            'customer' => $customer
-        ]);
+        if (auth()->user()->role === 'admin') {
+            return Inertia::render('Customer/Edit', [
+                'customer' => $customer
+            ]);
+        } else {
+            abort(403, '権限がありません。');
+        }
     }
 
     /**
@@ -111,6 +125,7 @@ class CustomerController extends Controller
         $customer->birthday = $request->birthday;
         $customer->gender =  $request->gender;
         $customer->usermemo = $request->usermemo;
+        $customer->role = $request->role;
         $customer->save();
         return to_route('customers.index')
             ->with([

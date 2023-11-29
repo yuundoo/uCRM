@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Item;
 use App\Models\Purchase;
+use App\Models\Reservation;
 
 class Customer extends Authenticatable
 {
@@ -63,5 +64,10 @@ class Customer extends Authenticatable
     public function purchase()
     {
         return $this->hasMany(Purchase::class);
+    }
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
     }
 }

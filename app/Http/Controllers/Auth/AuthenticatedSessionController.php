@@ -21,33 +21,32 @@ class AuthenticatedSessionController extends Controller
     {
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
-            'status' => session('status'),
+
         ]);
     }
 
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request)
     {
-        $request->authenticate();
+        $credentials = $request->only('email', 'password');
 
-        $request->session()->regenerate();
-
-        return redirect()->intended(RouteServiceProvider::HOME);
+        if (Auth::attempt($credentials)) {
+            return redirect()->intended(RouteServiceProvider::HOME);
+        }
     }
 
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request)
     {
-        Auth::guard('web')->logout();
+        Auth::logout();
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/dashboard');
     }
 }

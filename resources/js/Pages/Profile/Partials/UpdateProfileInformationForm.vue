@@ -4,16 +4,17 @@ import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { Link, useForm, usePage } from "@inertiajs/vue3";
+import { reactive } from "vue";
 
 const props = defineProps({
     mustVerifyEmail: Boolean,
     status: String,
 });
 
-const user = usePage().props.auth.user;
+const user = usePage().props.user;
 
-const form = useForm({
-    name: user.name,
+const form = reactive({
+    name: user.username,
     email: user.email,
 });
 </script>
@@ -41,7 +42,7 @@ const form = useForm({
                     id="name"
                     type="text"
                     class="block w-full mt-1"
-                    v-model="form.name"
+                    v-model="form.username"
                     required
                     autofocus
                     autocomplete="name"

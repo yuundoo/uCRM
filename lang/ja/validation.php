@@ -169,7 +169,8 @@ return [
         'username' => '顧客名',
         'usermemo' => '説明',
         'quantity' => '数量',
-        'customer_id' => '顧客の姓名'
+        'customer_id' => '顧客の姓名',
+        'password' => '暗証番号'
 
     ],
 

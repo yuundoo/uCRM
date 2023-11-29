@@ -31,6 +31,14 @@ class StylelistController extends Controller
     }
 
     /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\Stylelist  $stylelist
+     * @return \Illuminate\Http\Response
+     */
+
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -71,7 +79,7 @@ class StylelistController extends Controller
     public function edit(Stylelist $stylelist)
     {
         return Inertia::render('Stylelist/Edit', [
-            'stylelist' => $stylelist
+            'stylelists' => $stylelist
         ]);
     }
 

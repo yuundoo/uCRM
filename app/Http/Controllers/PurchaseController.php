@@ -20,18 +20,22 @@ class PurchaseController extends Controller
      */
     public function index(Request $request)
     {
-        $searchTerm = $request->input('search', '');
+        if (auth()->user()->role === 'admin') {
+            $searchTerm = $request->input('search', '');
 
-        $orders = Order::query()
-            ->search($searchTerm) // 검색 스코프 메서드 적용
-            ->groupBy('id')
-            ->selectRaw('id, MAX(customer_name) as customer_name, GROUP_CONCAT(item_name) as item_name, SUM(subtotal) as total, MAX(status) as status, MAX(created_at) as created_at')
-            ->paginate(50);
+            $orders = Order::query()
+                ->search($searchTerm) // 검색 스코프 메서드 적용
+                ->groupBy('id')
+                ->selectRaw('id, MAX(customer_name) as customer_name, GROUP_CONCAT(item_name) as item_name, SUM(subtotal) as total, MAX(status) as status, MAX(created_at) as created_at')
+                ->paginate(50);
 
-        return Inertia::render('Purchase/Index', [
-            'orders' => $orders,
-            'filters' => $request->only(['search' => $searchTerm]), // 검색 필터를 프론트엔드에 전달
-        ]);
+            return Inertia::render('Purchase/Index', [
+                'orders' => $orders,
+                'filters' => $request->only(['search' => $searchTerm]), // 검색 필터를 프론트엔드에 전달
+            ]);
+        } else {
+            abort(403, '権限がありません。');
+        }
     }
 
     /**
@@ -41,10 +45,14 @@ class PurchaseController extends Controller
      */
     public function create()
     {
-        $items = Item::select('id', 'name', 'price')->where('is_selling', true)->get();
-        return Inertia::render('Purchase/Create', [
-            'items' => $items
-        ]);
+        if (auth()->user()->role === 'admin') {
+            $items = Item::select('id', 'name', 'price')->where('is_selling', true)->get();
+            return Inertia::render('Purchase/Create', [
+                'items' => $items
+            ]);
+        } else {
+            abort(403, '権限がありません。');
+        }
     }
 
     /**
@@ -80,17 +88,22 @@ class PurchaseController extends Controller
      */
     public function show(Purchase $purchase)
     {
-        $item = Order::where('id', $purchase->id)->get();
 
-        //합계
-        $order = Order::where('id', $purchase->id)
-            ->groupBy('id')
-            ->selectRaw('id, sum(subtotal) as total, customer_name, status, created_at, updated_at')
-            ->get();
-        return Inertia::render('Purchase/Show', [
-            'item' => $item,
-            'order' => $order
-        ]);
+        if (auth()->user()->role === 'admin') {
+            $item = Order::where('id', $purchase->id)->get();
+
+            //합계
+            $order = Order::where('id', $purchase->id)
+                ->groupBy('id')
+                ->selectRaw('id, sum(subtotal) as total, customer_name, status, created_at, updated_at')
+                ->get();
+            return Inertia::render('Purchase/Show', [
+                'item' => $item,
+                'order' => $order
+            ]);
+        } else {
+            abort(403, '権限がありません。');
+        }
     }
 
     /**
@@ -101,39 +114,44 @@ class PurchaseController extends Controller
      */
     public function edit(Purchase $purchase)
     {
-        $purchase = Purchase::find($purchase->id);
 
-        $allItems = Item::select('id', 'name', 'price')
-            ->get();
+        if (auth()->user()->role === 'admin') {
+            $purchase = Purchase::find($purchase->id);
 
-        $items = [];
+            $allItems = Item::select('id', 'name', 'price')
+                ->get();
 
-        foreach ($allItems as $allItem) {
-            $quantity = 0;
-            foreach ($purchase->items as $item) {
-                if ($allItem->id === $item->id) {
-                    $quantity = $item->pivot->quantity;
+            $items = [];
+
+            foreach ($allItems as $allItem) {
+                $quantity = 0;
+                foreach ($purchase->items as $item) {
+                    if ($allItem->id === $item->id) {
+                        $quantity = $item->pivot->quantity;
+                    }
                 }
+                array_push($items, [
+                    'id' => $allItem->id,
+                    'name' => $allItem->name,
+                    'price' => $allItem->price,
+                    'quantity' => $quantity,
+                ]);
             }
-            array_push($items, [
-                'id' => $allItem->id,
-                'name' => $allItem->name,
-                'price' => $allItem->price,
-                'quantity' => $quantity,
+
+
+            $order = Order::groupBy('id')
+                ->where('id', $purchase->id)
+                ->selectRaw('id, customer_id, 
+            customer_name, status, created_at')
+                ->get();
+
+            return Inertia::render('Purchase/Edit', [
+                'items' => $items,
+                'order' => $order
             ]);
+        } else {
+            abort(403, '権限がありません。');
         }
-
-
-        $order = Order::groupBy('id')
-            ->where('id', $purchase->id)
-            ->selectRaw('id, customer_id, 
-        customer_name, status, created_at')
-            ->get();
-
-        return Inertia::render('Purchase/Edit', [
-            'items' => $items,
-            'order' => $order
-        ]);
     }
 
 
@@ -146,7 +164,7 @@ class PurchaseController extends Controller
      */
     public function update(UpdatePurchaseRequest $request, Purchase $purchase)
     {
-        $this->authorize('update', $purchase);
+        // $this->authorize('update', $purchase);
         $purchase->status = $request->status;
         $purchase->save();
 

@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\User;
 use App\Models\Purchase;
 use App\Models\Customer;
+use App\Models\Stylelist;
 
 class Item extends Model
 {
@@ -28,5 +28,10 @@ class Item extends Model
     {
         return $this->belongsToMany(Purchase::class)
             ->withPivot('quantity');
+    }
+
+    public function stylelists()
+    {
+        return $this->hasMany(Stylelist::class);
     }
 }

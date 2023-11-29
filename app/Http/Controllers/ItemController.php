@@ -35,7 +35,11 @@ class ItemController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Items/Create');
+        if (auth()->user()->role === 'admin') {
+            return Inertia::render('Items/Create');
+        } else {
+            abort(403, '権限がありません。');
+        }
     }
 
     /**
@@ -66,9 +70,14 @@ class ItemController extends Controller
      */
     public function show(Item $item)
     {
-        return Inertia::render('Items/Show', [
-            'item' => $item
-        ]);
+
+        if (auth()->user()->role === 'admin') {
+            return Inertia::render('Items/Show', [
+                'item' => $item
+            ]);
+        } else {
+            abort(403, '権限がありません。');
+        }
     }
 
     /**
@@ -79,17 +88,14 @@ class ItemController extends Controller
      */
     public function edit(Item $item)
     {
-        // if (Gate::allows('items.edit', $item)) {
-        //     return Inertia::render('Items/Edit', [
-        //         'item' => $item
-        //     ]);
-        // } else {
-        //     abort(403, 'この製品を編集する権限がありません。');
-        // }
 
-        return Inertia::render('Items/Edit', [
-            'item' => $item
-        ]);
+        if (auth()->user()->role === 'admin') {
+            return Inertia::render('Items/Edit', [
+                'item' => $item
+            ]);
+        } else {
+            abort(403, '権限がありません。');
+        }
     }
 
     /**

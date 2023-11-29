@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Customer;
+
 return [
 
     /*
@@ -15,7 +17,7 @@ return [
 
     'defaults' => [
         'guard' => 'web',
-        'passwords' => 'users',
+        'passwords' => 'customers',
     ],
 
     /*
@@ -38,7 +40,7 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'customers',
         ],
     ],
 
@@ -60,14 +62,14 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'customers' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' =>  App\Models\Customer::class,
         ],
 
-        // 'users' => [
+        // 'customers' => [
         //     'driver' => 'database',
-        //     'table' => 'users',
+        //     'table' => 'customers',
         // ],
     ],
 
@@ -87,8 +89,8 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
+        'customers' => [
+            'provider' => 'customers',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
