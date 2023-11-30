@@ -44,7 +44,7 @@ const submit = () => {
                             />
                         </Link>
                     </div>
-                    <InputLabel for="email" value="Email" />
+                    <InputLabel for="email" value="ユーザID" />
                     <TextInput
                         id="email"
                         type="email"
@@ -57,7 +57,7 @@ const submit = () => {
                 </div>
 
                 <div>
-                    <InputLabel for="password" value="Password" />
+                    <InputLabel for="password" value="パスワード" />
                     <TextInput
                         id="password"
                         type="password"
@@ -79,13 +79,27 @@ const submit = () => {
                         :href="route('password.request')"
                         class="text-sm text-gray-600 underline hover:text-gray-900"
                     >
-                        Forgot your password?
+                        パスワードを忘れた場合
                     </Link>
                 </div>
 
-                <PrimaryButton class="w-full" :disabled="form.processing">
-                    Log in
+                <PrimaryButton
+                    class="flex justify-center w-full"
+                    :disabled="form.processing"
+                >
+                    ログイン
                 </PrimaryButton>
+                <div class="mt-6 text-center">
+                    <span class="text-sm text-gray-600"
+                        >まだ会員に登録されていない方
+                    </span>
+                    <Link
+                        :href="route('register')"
+                        class="text-sm text-blue-500 underline hover:text-blue-700"
+                    >
+                        会員加入
+                    </Link>
+                </div>
             </form>
         </div>
     </div>

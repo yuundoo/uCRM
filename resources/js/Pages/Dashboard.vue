@@ -2,6 +2,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 import { Link } from "@inertiajs/inertia-vue3";
+import FlashMessage from "@/Components/FlashMessage.vue";
 </script>
 
 <template>
@@ -17,8 +18,9 @@ import { Link } from "@inertiajs/inertia-vue3";
                     style="height: 300px; object-position: center"
                 />
                 <div class="container px-5 py-24 mx-auto">
+                    <FlashMessage />
                     <div class="flex flex-wrap w-full mb-20">
-                        <div class="w-full mb-6 lg:w-1/2 lg:mb-0">
+                        <div class="w-full p-3 mb-6 lg:w-1/2 lg:mb-0">
                             <h1
                                 class="mb-2 text-2xl font-medium text-gray-900 sm:text-3xl title-font"
                             >

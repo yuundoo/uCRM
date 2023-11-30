@@ -9,12 +9,20 @@ const props = defineProps({ stylelists: Array });
     <Head title="デザイナーご紹介" />
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                デザイナーご紹介
-            </h2>
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-semibold leading-tight text-gray-800">
+                    デザイナーご紹介
+                </h2>
+                <Link
+                    as="button"
+                    :href="route('reservations.create')"
+                    class="flex p-2 px-4 py-2 font-bold text-white bg-gray-500 rounded-full hover:bg-gray-700"
+                >
+                    予約
+                </Link>
+            </div>
         </template>
         <div class="container px-4 py-4 mx-auto mt-3">
-            <button class="flex p-2">登録</button>
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <div
                     class="p-4 overflow-hidden bg-white rounded-lg shadow-lg"
@@ -84,11 +92,6 @@ const props = defineProps({ stylelists: Array });
                                 {{ stylelist.review_count }}口コミ
                             </span>
                         </div>
-                        <Link
-                            as="button"
-                            class="px-4 py-2 font-bold text-white bg-gray-500 rounded-full hover:bg-gray-700"
-                            >予約</Link
-                        >
                     </div>
                 </div>
             </div>

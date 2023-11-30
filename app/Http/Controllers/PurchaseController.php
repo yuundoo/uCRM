@@ -7,12 +7,22 @@ use App\Http\Requests\UpdatePurchaseRequest;
 use App\Models\Purchase;
 use Inertia\Inertia;
 use App\Models\Item;
-use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Models\Reservation;
+use App\Models\Stylelist;
+use App\Services\ReservationService;
 
 
 class PurchaseController extends Controller
 {
+
+    protected $reservationService;
+
+    public function __construct(ReservationService $reservationService)
+    {
+        $this->reservationService = $reservationService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -22,15 +32,10 @@ class PurchaseController extends Controller
     {
         if (auth()->user()->role === 'admin') {
             $searchTerm = $request->input('search', '');
-
-            $orders = Order::query()
-                ->search($searchTerm) // 검색 스코프 메서드 적용
-                ->groupBy('id')
-                ->selectRaw('id, MAX(customer_name) as customer_name, GROUP_CONCAT(item_name) as item_name, SUM(subtotal) as total, MAX(status) as status, MAX(created_at) as created_at')
-                ->paginate(50);
+            $reservations = $this->reservationService->allReservations(30, $searchTerm);
 
             return Inertia::render('Purchase/Index', [
-                'orders' => $orders,
+                'reservations' => $reservations,
                 'filters' => $request->only(['search' => $searchTerm]), // 검색 필터를 프론트엔드에 전달
             ]);
         } else {
@@ -86,20 +91,15 @@ class PurchaseController extends Controller
      * @param  \App\Models\Purchase  $purchase
      * @return \Illuminate\Http\Response
      */
-    public function show(Purchase $purchase)
+    public function show($id)
     {
-
         if (auth()->user()->role === 'admin') {
-            $item = Order::where('id', $purchase->id)->get();
 
-            //합계
-            $order = Order::where('id', $purchase->id)
-                ->groupBy('id')
-                ->selectRaw('id, sum(subtotal) as total, customer_name, status, created_at, updated_at')
-                ->get();
+            $reservation = Reservation::with(['customer', 'stylelist', 'item'])
+                ->findOrFail($id);
+
             return Inertia::render('Purchase/Show', [
-                'item' => $item,
-                'order' => $order
+                'reservation' => $reservation
             ]);
         } else {
             abort(403, '権限がありません。');
@@ -112,42 +112,20 @@ class PurchaseController extends Controller
      * @param  \App\Models\Purchase  $purchase
      * @return \Illuminate\Http\Response
      */
-    public function edit(Purchase $purchase)
+    public function edit($id)
     {
-
         if (auth()->user()->role === 'admin') {
-            $purchase = Purchase::find($purchase->id);
+            $reservation = Reservation::with(['customer', 'stylelist', 'item'])
+                ->findOrFail($id);
 
-            $allItems = Item::select('id', 'name', 'price')
-                ->get();
-
-            $items = [];
-
-            foreach ($allItems as $allItem) {
-                $quantity = 0;
-                foreach ($purchase->items as $item) {
-                    if ($allItem->id === $item->id) {
-                        $quantity = $item->pivot->quantity;
-                    }
-                }
-                array_push($items, [
-                    'id' => $allItem->id,
-                    'name' => $allItem->name,
-                    'price' => $allItem->price,
-                    'quantity' => $quantity,
-                ]);
-            }
-
-
-            $order = Order::groupBy('id')
-                ->where('id', $purchase->id)
-                ->selectRaw('id, customer_id, 
-            customer_name, status, created_at')
-                ->get();
+            $stylelists = Stylelist::all();
+            $items = Item::all();
 
             return Inertia::render('Purchase/Edit', [
+                'reservation' => $reservation,
+                'stylelists' => $stylelists,
                 'items' => $items,
-                'order' => $order
+
             ]);
         } else {
             abort(403, '権限がありません。');
@@ -162,22 +140,17 @@ class PurchaseController extends Controller
      * @param  \App\Models\Purchase  $purchase
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePurchaseRequest $request, Purchase $purchase)
+    public function update(UpdatePurchaseRequest $request, Reservation $reservation)
     {
         // $this->authorize('update', $purchase);
-        $purchase->status = $request->status;
-        $purchase->save();
+        $reservation->status = $request->status;
+        $reservation->customer_id = $request->customer_id;
+        $reservation->stylelist_id = $request->stylelist_id;
+        $reservation->item_id = $request->item_id;
+        $reservation->date = $request->date;
+        $reservation->time = $request->time;
 
-        $items = [];
-        foreach ($request->items as $item) {
-            $items = $items + [
-                $item['id'] => [
-                    'quantity' => $item['quantity']
-                ]
-            ];
-        }
-
-        $purchase->items()->sync($items);
+        $reservation->save();
         return to_route('purchases.index')->with([
             'message' => '修正完了しました。',
             'status' => 'success'

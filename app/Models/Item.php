@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Purchase;
 use App\Models\Customer;
 use App\Models\Stylelist;
+use App\Models\Reservation;
+use App\Models\Order;
+
 
 class Item extends Model
 {
@@ -33,5 +36,15 @@ class Item extends Model
     public function stylelists()
     {
         return $this->hasMany(Stylelist::class);
+    }
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
     }
 }

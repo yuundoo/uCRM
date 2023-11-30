@@ -26,6 +26,7 @@ class StorereservationRequest extends FormRequest
         return [
             'customer_id' => 'required|exists:customers,id',
             'stylelist_id' => 'required|exists:stylelists,id',
+            'item_id' => 'required|exists:items,id',
             'date' => 'required|date|after_or_equal:today',
             'time' => 'required',
         ];

@@ -14,11 +14,22 @@ onMounted(() => {
     <Head title="デザイナー詳細" />
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
+            <Link
+                as="button"
+                :href="route('stylelists.index')"
+                class="text-xl font-semibold leading-tight text-gray-800"
+            >
                 デザイナー詳細
-            </h2>
+            </Link>
         </template>
-        <div class="flex flex-col items-center justify-center p-6">
+        <div
+            class="flex flex-col items-center justify-center p-6"
+            :style="{
+                backgroundImage: 'url(/images/showCover.jpg)',
+                backgroundPosition: 'center center',
+                backgroundSize: 'cover',
+            }"
+        >
             <div
                 class="w-full max-w-sm overflow-hidden text-center bg-white rounded-lg shadow-lg"
             >
@@ -33,12 +44,22 @@ onMounted(() => {
                     <div class="mb-2 text-xl font-bold">
                         {{ stylelist.name }}
                     </div>
+                    <div class="flex items-center justify-center p-2 mt-2">
+                        <div class="text-purple-600">
+                            口コミ {{ stylelist.review_count }}
+                        </div>
+                    </div>
                     <p class="mb-4 text-base text-gray-700">
                         {{ stylelist.description }}
                     </p>
                     <!-- 태그 -->
                     <div class="mb-4">
                         <template v-for="tag in stylelist.tags" :key="tag">
+                            <span
+                                class="inline-block px-3 py-1.5 mr-3 text-xs font-semibold text-pink-600 bg-pink-200 rounded-full"
+                            >
+                                人気スタイル
+                            </span>
                             <span
                                 class="inline-block px-3 py-1 mr-2 text-sm font-semibold text-gray-700 bg-gray-200 rounded-full"
                             >
@@ -57,11 +78,6 @@ onMounted(() => {
                     </div>
                     <!-- 소셜 미디어 버튼 -->
                     <div class="flex justify-center gap-4">
-                        <button
-                            class="px-4 py-2 font-bold text-white bg-gray-500 rounded-full hover:bg-green-700"
-                        >
-                            予約
-                        </button>
                         <button
                             class="px-4 py-2 font-bold text-white bg-gray-500 rounded-full hover:bg-gray-700"
                         >

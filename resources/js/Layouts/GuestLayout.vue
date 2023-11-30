@@ -13,7 +13,7 @@ import { Link } from "@inertiajs/vue3";
         }"
     >
         <div class="mt-4">
-            <Link href="/">
+            <Link>
                 <ApplicationLogo class="w-20 h-20 text-gray-500 fill-current" />
             </Link>
         </div>

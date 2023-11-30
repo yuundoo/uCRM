@@ -8,11 +8,7 @@ import { onMounted, ref } from "vue";
 import { Inertia } from "@inertiajs/inertia";
 
 const props = defineProps({
-    orders: Object,
-});
-
-onMounted(() => {
-    console.log(props.orders.data);
+    reservations: Object,
 });
 
 const search = ref("");
@@ -37,12 +33,12 @@ const formatDate = (dateString) => {
 </script>
 
 <template>
-    <Head title="購買履歴" />
+    <Head title="予約履歴" />
 
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                購買履歴
+                予約履歴
             </h2>
         </template>
 
@@ -100,13 +96,9 @@ const formatDate = (dateString) => {
                                                 <th
                                                     class="px-4 py-3 text-sm font-medium tracking-wider text-gray-900 bg-gray-100 title-font"
                                                 >
-                                                    購買名
+                                                    予約スタイル
                                                 </th>
-                                                <th
-                                                    class="px-4 py-3 text-sm font-medium tracking-wider text-gray-900 bg-gray-100 title-font"
-                                                >
-                                                    合計金額
-                                                </th>
+
                                                 <th
                                                     class="px-4 py-3 text-sm font-medium tracking-wider text-gray-900 bg-gray-100 title-font"
                                                 >
@@ -115,15 +107,15 @@ const formatDate = (dateString) => {
                                                 <th
                                                     class="px-4 py-3 text-sm font-medium tracking-wider text-gray-900 bg-gray-100 title-font"
                                                 >
-                                                    購入日
+                                                    予約日
                                                 </th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr
-                                                v-for="order in props.orders
-                                                    .data"
-                                                :key="order.id"
+                                                v-for="reservation in props
+                                                    .reservations.data"
+                                                :key="reservation.id"
                                             >
                                                 <td
                                                     class="px-4 py-3 border-b-2 border-gray-200"
@@ -135,36 +127,36 @@ const formatDate = (dateString) => {
                                                                 'purchases.show',
                                                                 {
                                                                     purchase:
-                                                                        order.id,
+                                                                        reservation.id,
                                                                 }
                                                             )
                                                         "
                                                     >
-                                                        {{ order.id }}
+                                                        {{ reservation.id }}
                                                     </Link>
                                                 </td>
 
                                                 <td
                                                     class="px-4 py-3 border-b-2 border-gray-200"
                                                 >
-                                                    {{ order.customer_name }}
+                                                    {{
+                                                        reservation.customer
+                                                            .username
+                                                    }}
                                                 </td>
                                                 <td
                                                     class="px-4 py-3 border-b-2 border-gray-200"
                                                 >
-                                                    {{ order.item_name }}
+                                                    {{ reservation.item.name }}
                                                 </td>
-                                                <td
-                                                    class="px-4 py-3 border-b-2 border-gray-200"
-                                                >
-                                                    {{ order.total }}
-                                                </td>
+
                                                 <td
                                                     class="px-4 py-3 border-b-2 border-gray-200"
                                                 >
                                                     <span
                                                         v-if="
-                                                            order.status === 1
+                                                            reservation.status ===
+                                                            'reservated'
                                                         "
                                                         >未キャンセル</span
                                                     >
@@ -177,7 +169,7 @@ const formatDate = (dateString) => {
                                                 >
                                                     {{
                                                         formatDate(
-                                                            order.created_at
+                                                            reservation.created_at
                                                         )
                                                     }}
                                                 </td>
@@ -188,7 +180,7 @@ const formatDate = (dateString) => {
                             </div>
                             <Pagination
                                 class="flex justify-center"
-                                :links="props.orders.links"
+                                :links="props.reservations.links"
                             ></Pagination>
                         </section>
                     </div>

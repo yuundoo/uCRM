@@ -4,13 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorereservationRequest;
 use App\Http\Requests\UpdatereservationRequest;
+use App\Models\Customer;
 use App\Models\Reservation;
 use Inertia\Inertia;
 use App\Models\Stylelist;
 use App\Models\Item;
+use App\Services\ReservationService;
 
 class ReservationController extends Controller
 {
+
+    protected $reservationService;
+
+    public function __construct(ReservationService $reservationService)
+    {
+        $this->reservationService = $reservationService;
+    }
+
+
+
     /**
      * Display a listing of the resource.
      *
@@ -18,6 +30,11 @@ class ReservationController extends Controller
      */
     public function index()
     {
+        $reservations = $this->reservationService->listReservations();
+
+        return Inertia::render('Profile/BookingPage', [
+            'reservations' => $reservations
+        ]);
     }
 
     /**
@@ -29,7 +46,8 @@ class ReservationController extends Controller
     {
         return Inertia::render('Stylelist/Reservation', [
             'stylelists' => Stylelist::select('id', 'name', 'review_count',)->get(),
-            'items' => Item::select('name')->get()
+            'items' => Item::select('id', 'name', 'price')->get(),
+            'customers' => Customer::select('username')->get()
         ]);
     }
 
@@ -44,11 +62,15 @@ class ReservationController extends Controller
         Reservation::create([
             'customer_id' => $request->customer_id,
             'stylelist_id' => $request->stylelist_id,
+            'item_id' => $request->item_id,
             'date' => $request->date,
             'time' => $request->time,
         ]);
 
-        return redirect()->route('/dashboard')->with('success', '予約完了できました。');
+        return redirect()->route('dashboard')->with([
+            'message' => '予約完了できました。ありがとうございます！',
+            'status' => 'success',
+        ]);
     }
 
     /**

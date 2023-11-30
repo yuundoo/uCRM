@@ -78,21 +78,7 @@ const showingNavigationDropdown = ref(false);
                                     顧客管理
                                 </NavLink>
                             </div>
-                            <div
-                                class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex"
-                            >
-                                <NavLink
-                                    v-if="
-                                        $page.props.auth.user.role === 'admin'
-                                    "
-                                    :href="route('purchases.create')"
-                                    :active="
-                                        route().current('purchases.create')
-                                    "
-                                >
-                                    購入登録
-                                </NavLink>
-                            </div>
+
                             <div
                                 class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex"
                             >
@@ -103,7 +89,7 @@ const showingNavigationDropdown = ref(false);
                                     :href="route('purchases.index')"
                                     :active="route().current('purchases.index')"
                                 >
-                                    購買履歴
+                                    予約履歴
                                 </NavLink>
                             </div>
                         </div>
@@ -141,16 +127,26 @@ const showingNavigationDropdown = ref(false);
 
                                     <template #content>
                                         <DropdownLink
+                                            v-if="
+                                                $page.props.auth.user.role ===
+                                                'user'
+                                            "
+                                            as="button"
+                                            :href="route('reservations.index')"
+                                        >
+                                            自分の予約
+                                        </DropdownLink>
+                                        <DropdownLink
                                             :href="route('profile.edit')"
                                         >
-                                            Profile
+                                            プロフィール
                                         </DropdownLink>
                                         <DropdownLink
                                             :href="route('logout')"
                                             method="post"
                                             as="button"
                                         >
-                                            Log Out
+                                            ログアウト
                                         </DropdownLink>
                                     </template>
                                 </Dropdown>
