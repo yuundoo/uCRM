@@ -38,4 +38,15 @@ class ReservationService
 
         return $reservations;
     }
+
+    // public function updateReservations()
+    // {
+    //     $userId = auth()->user()->id;
+    //     $reservations = Reservation::where('customer_id', $userId)
+    //         ->with(['customer', 'stylelist', 'item'])
+    //         ->get();
+
+
+    //     return $reservations;
+    // }
 }

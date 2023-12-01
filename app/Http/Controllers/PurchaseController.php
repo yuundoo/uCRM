@@ -140,17 +140,19 @@ class PurchaseController extends Controller
      * @param  \App\Models\Purchase  $purchase
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePurchaseRequest $request, Reservation $reservation)
+    public function update(UpdatePurchaseRequest $request, $id,)
     {
         // $this->authorize('update', $purchase);
-        $reservation->status = $request->status;
-        $reservation->customer_id = $request->customer_id;
-        $reservation->stylelist_id = $request->stylelist_id;
-        $reservation->item_id = $request->item_id;
-        $reservation->date = $request->date;
-        $reservation->time = $request->time;
+        $reservation = Reservation::findOrFail($id); // or Reservation, depending on your model name
 
-        $reservation->save();
+        // 요청된 데이터로 예약 업데이트
+        $reservation->date = $request->input('date');
+        $reservation->time = $request->input('time');
+        $reservation->stylelist_id = $request->input('stylelist_id');
+        $reservation->item_id = $request->input('item_id');
+        $reservation->status = $request->input('status');
+
+        $reservation->save(); // 변경 사항 저장
         return to_route('purchases.index')->with([
             'message' => '修正完了しました。',
             'status' => 'success'
@@ -165,6 +167,5 @@ class PurchaseController extends Controller
      */
     public function destroy(Purchase $purchase)
     {
-        //
     }
 }

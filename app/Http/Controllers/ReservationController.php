@@ -102,9 +102,15 @@ class ReservationController extends Controller
      * @param  \App\Models\reservation  $reservation
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatereservationRequest $request, reservation $reservation)
+    public function update(UpdatereservationRequest $request, Reservation $reservation)
     {
-        //
+        $reservation->status = $request->input('status');
+        $reservation->reason = $request->input('reason');
+        $reservation->save();
+        return to_route('reservations.index')->with([
+            'message' => 'キャンセル完了になりました, またご覧ください！',
+            'status' => 'success'
+        ]);
     }
 
     /**
