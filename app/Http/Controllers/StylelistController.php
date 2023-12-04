@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateStylelistRequest;
 use App\Models\Stylelist;
 use App\Services\ReviewService;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class StylelistController extends Controller
 {
@@ -73,12 +74,15 @@ class StylelistController extends Controller
      */
     public function show(Stylelist $stylelist)
     {
-
         $reviews = $this->reviewService->listReviews();
-
+    
+        // 현재 로그인한 사용자의 customer_id 가져오기
+        $customer_id = Auth::id();
+    
         return Inertia::render('Stylelist/Show', [
             'stylelist' => $stylelist,
-            'reviews' => $reviews
+            'review' => $reviews, 
+            'customer_id' => $customer_id, // 폼에 전달할 customer_id 추가
         ]);
     }
 

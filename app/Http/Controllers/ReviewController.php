@@ -44,8 +44,8 @@ class ReviewController extends Controller
         ]);
 
         // 저장 성공 응답 반환
-        return to_route('reservations.index')->with([
-            'message' => 'レビューありがとうございます！',
+        return to_route('stylelists.show')->with([
+            'message' => 'コメントありがとうございます。',
             'status' => 'success'
         ]);
     }
