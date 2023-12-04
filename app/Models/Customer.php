@@ -70,4 +70,9 @@ class Customer extends Authenticatable
     {
         return $this->hasMany(Reservation::class);
     }
+
+    public function review()
+    {
+        return $this->hasMany(Review::class);
+    }
 }

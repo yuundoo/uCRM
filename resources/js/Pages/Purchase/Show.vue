@@ -10,6 +10,10 @@ const formatDate = (dateString) => {
     return date.toISOString().split("T")[0];
 };
 
+onMounted(() => {
+    console.log(props.reservation);
+});
+
 const formatTime = (timeString) => {
     // UTC를 사용하지 않고 로컬 시간으로 파싱
     const time = new Date("1970-01-01T" + timeString);
@@ -53,7 +57,7 @@ const formatTime = (timeString) => {
                                                             formatDate(
                                                                 props
                                                                     .reservation
-                                                                    .created_at
+                                                                    .date
                                                             )
                                                         }}
                                                     </div>

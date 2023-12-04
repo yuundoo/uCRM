@@ -25,7 +25,7 @@ class ReservationService
         return Reservation::with(['customer', 'stylelist', 'item'])
             ->search($searchTerm)
             ->orderBy('id')
-            ->paginate($perPage, ['id', 'customer_id', 'item_id', 'created_at', 'status']);
+            ->paginate($perPage, ['id', 'customer_id', 'item_id', 'created_at', 'status', 'date']);
     }
 
 

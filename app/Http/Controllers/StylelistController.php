@@ -5,10 +5,18 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreStylelistRequest;
 use App\Http\Requests\UpdateStylelistRequest;
 use App\Models\Stylelist;
+use App\Services\ReviewService;
 use Inertia\Inertia;
 
 class StylelistController extends Controller
 {
+
+    protected $reviewService;
+
+    public function __construct(ReviewService $reviewService)
+    {
+        $this->reviewService = $reviewService;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -65,8 +73,12 @@ class StylelistController extends Controller
      */
     public function show(Stylelist $stylelist)
     {
+
+        $reviews = $this->reviewService->listReviews();
+
         return Inertia::render('Stylelist/Show', [
-            'stylelist' => $stylelist
+            'stylelist' => $stylelist,
+            'reviews' => $reviews
         ]);
     }
 

@@ -24,7 +24,11 @@ class UpdatePurchaseRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'stylelist_id' => ['required'],
+            'date' => ['required'],
+            'time' => ['required'],
+            'item_id' => ['required'],
+            'status' => ['required'],
         ];
     }
 }

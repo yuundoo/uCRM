@@ -169,7 +169,7 @@ const formatDate = (dateString) => {
                                                 >
                                                     {{
                                                         formatDate(
-                                                            reservation.created_at
+                                                            reservation.date
                                                         )
                                                     }}
                                                 </td>

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Stylelist;
 use App\Models\Customer;
 use App\Models\Item;
+use App\Models\Review;
 
 class Reservation extends Model
 {
@@ -34,6 +35,11 @@ class Reservation extends Model
     public function item()
     {
         return $this->belongsTo(Item::class);
+    }
+
+    public function review()
+    {
+        return $this->hasMany(Review::class);
     }
 
     public function scopeSearch($query, $term)

@@ -16,7 +16,7 @@ const formatTime = (timeString) => {
         hour12: false,
     });
 };
-const props = defineProps({ reservations: Object });
+const props = defineProps({ reservations: Object, errors: Object });
 onMounted(() => {
     console.log(props.reservations);
 });
@@ -100,6 +100,7 @@ const confirmCancel = (id) => {
                                 {{ reservation.item.price }}円
                             </div>
                             <button
+                                v-if="reservation.status !== 'cancel'"
                                 @click="toggleDetails(reservation.id)"
                                 class="flex items-center justify-center w-12 p-2 bg-gray-200 rounded-full hover:bg-gray-300"
                             >
@@ -127,7 +128,7 @@ const confirmCancel = (id) => {
                         </div>
                         <div
                             v-if="selectedReservationId === reservation.id"
-                            class="flex flex-col justify-center w-1/4 h-full px-6 py-4 bg-gray-100 border-t border-gray-200"
+                            class="flex flex-col justify-center w-1/3 h-full px-6 py-4 bg-gray-100 border-t border-gray-200"
                         >
                             <div>
                                 予約時間: {{ formatTime(reservation.time) }}分
@@ -145,11 +146,12 @@ const confirmCancel = (id) => {
                     >
                         キャンセル済
                     </div>
-                    <div v-else class="w-1/6 p-12">
+                    <div v-else class="w-1/5 p-12">
                         <button
                             @click="openCancelModal(reservation.id)"
-                            class="font-semibold text-red-500 hover:text-red-800"
+                            class="flex items-center gap-2 font-semibold text-red-500 hover:text-red-800"
                         >
+                            <span>❌</span>
                             キャンセル
                         </button>
                     </div>
@@ -189,7 +191,7 @@ const confirmCancel = (id) => {
                                     />
                                     <button
                                         id="ok-btn"
-                                        @click="confirmCancel(form.id)"
+                                        @click.prevent="confirmCancel(form.id)"
                                         class="w-5/12 px-4 py-2 mr-2 text-base font-medium text-white bg-purple-500 rounded-md shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-green-300"
                                     >
                                         はい

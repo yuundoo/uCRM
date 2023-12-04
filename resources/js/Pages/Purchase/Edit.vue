@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, reactive, ref, computed } from "vue";
+import { reactive, ref } from "vue";
 import { Inertia } from "@inertiajs/inertia";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/inertia-vue3";
@@ -23,6 +23,7 @@ const updatePurchase = (id) => {
     form.item_id = Number(selectedStyle.value);
     form.stylelist_id = Number(selectedStylist.value);
     form.time = selectedTime.value;
+    form.date = selectedDate.value;
     Inertia.put(
         route("purchases.update", { purchase: id }),
         form,
@@ -125,6 +126,12 @@ const timeOptions = [
                                                             {{ time }}
                                                         </option>
                                                     </select>
+                                                    <div
+                                                        v-if="props.errors.time"
+                                                        class="mt-2 text-red-400"
+                                                    >
+                                                        {{ props.errors.time }}
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -188,6 +195,16 @@ const timeOptions = [
                                                             <!-- 예: 아이템 이름을 사용 -->
                                                         </option>
                                                     </select>
+                                                    <div
+                                                        v-if="
+                                                            props.errors.item_id
+                                                        "
+                                                        class="mt-2 text-red-400"
+                                                    >
+                                                        {{
+                                                            props.errors.item_id
+                                                        }}
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -220,6 +237,18 @@ const timeOptions = [
                                                             {{ stylist.name }}
                                                         </option>
                                                     </select>
+                                                    <div
+                                                        v-if="
+                                                            props.errors
+                                                                .stylelist_id
+                                                        "
+                                                        class="mt-2 text-red-400"
+                                                    >
+                                                        {{
+                                                            props.errors
+                                                                .stylelist_id
+                                                        }}
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -269,6 +298,16 @@ const timeOptions = [
                                                         >
                                                             キャンセル済
                                                         </label>
+                                                    </div>
+                                                    <div
+                                                        v-if="
+                                                            props.errors.status
+                                                        "
+                                                        class="mt-2 text-red-400"
+                                                    >
+                                                        {{
+                                                            props.errors.status
+                                                        }}
                                                     </div>
                                                 </div>
                                             </div>

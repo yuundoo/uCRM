@@ -10,6 +10,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\StylelistController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Auth;
 
 Route::resource('items', ItemController::class)->middleware(['auth', 'verified']);
@@ -25,6 +26,9 @@ Route::resource('purchases', PurchaseController::class)->middleware(['auth', 've
 Route::resource('stylelists', StylelistController::class)->middleware(['auth', 'verified']);
 
 Route::resource('reservations', ReservationController::class)->middleware(['auth', 'verified']);
+
+Route::resource('reviews', ReviewController::class)->middleware(['auth', 'verified']);
+
 
 
 Route::get(

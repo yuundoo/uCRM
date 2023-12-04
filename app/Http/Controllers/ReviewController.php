@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreReviewRequest;
 use App\Http\Requests\UpdateReviewRequest;
 use App\Models\Review;
+use App\Services\ReviewService;
 
 class ReviewController extends Controller
 {
@@ -36,7 +37,17 @@ class ReviewController extends Controller
      */
     public function store(StoreReviewRequest $request)
     {
-        //
+
+        Review::create([
+            'customer_id' => auth()->id(),
+            'content' => $request->content,
+        ]);
+
+        // 저장 성공 응답 반환
+        return to_route('reservations.index')->with([
+            'message' => 'レビューありがとうございます！',
+            'status' => 'success'
+        ]);
     }
 
     /**

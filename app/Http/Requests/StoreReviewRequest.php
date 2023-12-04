@@ -13,7 +13,7 @@ class StoreReviewRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,8 @@ class StoreReviewRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'customer_id' => ['required'],
+            'content' => ['required', 'string', 'max:50'],
         ];
     }
 }
