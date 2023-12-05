@@ -37,14 +37,17 @@ class ReviewController extends Controller
      */
     public function store(StoreReviewRequest $request)
     {
+        $stylelistId = $request->input('stylelist_id');
+
 
         Review::create([
             'customer_id' => auth()->id(),
+            'stylelist_id' => $stylelistId,
             'content' => $request->content,
         ]);
 
         // 저장 성공 응답 반환
-        return to_route('stylelists.show')->with([
+        return to_route('stylelists.show', ['stylelist' => $stylelistId])->with([
             'message' => 'コメントありがとうございます。',
             'status' => 'success'
         ]);
