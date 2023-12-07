@@ -1,19 +1,14 @@
 <script setup>
-import GeustLayout from '@/Layouts/GuestLayout.vue'
-import InputLabel from '@/Components/InputLabel.vue'
-import TextInput from '@/Components/TextInput.vue'
+import GeustLayout from '@/Layouts/GuestLayout.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import TextInput from '@/Components/TextInput.vue';
 
-const emiTest = e => console.log(e)
+const emiTest = (e) => console.log(e);
 </script>
 
-
 <template>
-   <GeustLayout>
+  <GeustLayout>
     <InputLabel value="件名">タイトル</InputLabel>
-    <TextInput modelValue="haha"
-    @update:modelValue="emiTest">
-
-    </TextInput>
-   </GeustLayout>
+    <TextInput modelValue="haha" @update:modelValue="emiTest"></TextInput>
+  </GeustLayout>
 </template>
-
