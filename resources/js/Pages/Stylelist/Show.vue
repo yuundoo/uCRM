@@ -4,7 +4,7 @@ import { Head } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/inertia-vue3';
 import { onMounted, reactive } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 const props = defineProps({
   stylelist: Object,
   errors: Object,
@@ -27,6 +27,10 @@ const formatDate = (dateString) => {
   const date = new Date(dateString);
   return date.toISOString().split('T')[0];
 };
+
+const filteredComments = computed(() => {
+  return props.review.filter((comment) => comment.stylelist_id === props.stylelist.id);
+});
 
 const isDropdownOpen = ref(false);
 
@@ -65,8 +69,8 @@ const toggleDropdown = () => {
           </p>
           <!-- 태그 -->
           <div class="mb-4">
+            <span class="inline-block px-3 py-1.5 mr-3 text-xs font-semibold text-pink-600 bg-pink-200 rounded-full">人気スタイル</span>
             <template v-for="tag in stylelist.tags" :key="tag">
-              <span class="inline-block px-3 py-1.5 mr-3 text-xs font-semibold text-pink-600 bg-pink-200 rounded-full">人気スタイル</span>
               <span class="inline-block px-3 py-1 mr-2 text-sm font-semibold text-gray-700 bg-gray-200 rounded-full">#{{ tag }}</span>
             </template>
           </div>
@@ -96,7 +100,8 @@ const toggleDropdown = () => {
           </div>
           <button type="submit" class="inline-flex items-center bg-gray-500 mt-3 py-2.5 px-4 text-xs font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">コメント作成</button>
         </form>
-        <article v-for="comment in review" :key="comment.id" class="p-6 text-base bg-white rounded-lg dark:bg-gray-900">
+
+        <article v-for="comment in filteredComments" :key="comment.id" class="p-6 text-base bg-white rounded-lg dark:bg-gray-900">
           <footer class="flex items-center justify-between mb-2">
             <div class="flex items-center">
               <p class="inline-flex items-center mr-3 text-sm font-semibold text-gray-900 dark:text-white">
@@ -114,39 +119,6 @@ const toggleDropdown = () => {
               </svg>
               <span class="sr-only">Comment settings</span>
             </button>
-            <!-- Dropdown menu -->
-            <!-- <div
-                            id="dropdownComment1"
-                            v-if="isDropdownOpen"
-                            class="absolute mt-2 bg-white divide-y divide-gray-100 rounded shadow w-36 dark:bg-gray-700 dark:divide-gray-600"
-                        >
-                            <ul
-                                class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                                aria-labelledby="dropdownMenuIconHorizontalButton"
-                            >
-                                <li>
-                                    <a
-                                        href="#"
-                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                        >Edit</a
-                                    >
-                                </li>
-                                <li>
-                                    <a
-                                        href="#"
-                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                        >Remove</a
-                                    >
-                                </li>
-                                <li>
-                                    <a
-                                        href="#"
-                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                        >Report</a
-                                    >
-                                </li>
-                            </ul>
-                        </div> -->
           </footer>
           <p class="text-gray-500 dark:text-gray-400">
             {{ comment.content }}
